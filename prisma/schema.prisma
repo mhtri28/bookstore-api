@@ -1,0 +1,208 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "mysql"
+}
+
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+}
+
+// ENUM nha mấy ní
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPING
+  COMPLETED
+  CANCELLED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+enum SupplyStatus {
+  PENDING
+  DONE
+  CANCELLED
+}
+
+enum CommonStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// ================= MODELS =================
+
+model User {
+  user_id    Int        @id @default(autoincrement())
+  fullname   String
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  status     UserStatus @default(ACTIVE)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  // Quan hệ
+  addresses Address[]
+  orders    Order[]
+}
+
+model Address {
+  address_id       Int          @id @default(autoincrement())
+  name             String       // Tên người nhận tại địa chỉ này
+  phone            String       @db.VarChar(15)
+  shipping_address String       @db.Text
+  isDefault        Boolean      @default(false)
+  status           CommonStatus @default(ACTIVE)
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+
+  // Khóa ngoại
+  user_id Int
+  user    User @relation(fields: [user_id], references: [user_id])
+}
+
+model Category {
+  category_id Int          @id @default(autoincrement())
+  name        String
+  description String?      @db.Text // Có thể null
+  status      CommonStatus @default(ACTIVE)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  // Quan hệ
+  books Book[]
+}
+
+model Author {
+  author_id  Int          @id @default(autoincrement())
+  name       String
+  status     CommonStatus @default(ACTIVE)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+
+  // Quan hệ
+  bookAuthors BookAuthor[]
+}
+
+model Book {
+  book_id     Int          @id @default(autoincrement())
+  title       String
+  price       Decimal      @db.Decimal(10, 2)
+  stock       Int          @default(0)
+  image_url   String?      @db.VarChar(255)
+  status      CommonStatus @default(ACTIVE)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  // Khóa ngoại
+  category_id Int
+  category    Category @relation(fields: [category_id], references: [category_id])
+
+  // Quan hệ
+  bookAuthors BookAuthor[]
+  orderItems  OrderItem[]
+  supplies    Supply[]
+}
+
+// Bảng trung gian Book - Author
+model BookAuthor {
+  bookauthor_id Int      @id @default(autoincrement())
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  // Khóa ngoại
+  book_id   Int
+  book      Book   @relation(fields: [book_id], references: [book_id])
+  author_id Int
+  author    Author @relation(fields: [author_id], references: [author_id])
+
+  @@unique([book_id, author_id]) // Chống trùng lặp cặp Book-Author
+}
+
+model Supply {
+  supply_id      Int      @id @default(autoincrement())
+  quantity       Int
+  imported_price Decimal  @db.Decimal(10, 2)
+  imported_at    DateTime @default(now())
+  status         SupplyStatus  @default(PENDING)
+
+  // Khóa ngoại
+  book_id Int
+  book    Book @relation(fields: [book_id], references: [book_id])
+}
+
+model Discount {
+  discount_id         Int          @id @default(autoincrement())
+  code                String       @unique // Mã giảm giá phải duy nhất
+  description         String?      @db.Text
+  discount_type       DiscountType
+  discount_value      Decimal      @db.Decimal(10, 2)
+  max_discount_amount Decimal?     @db.Decimal(10, 2) // Nullable nếu không giới hạn
+  min_order_value     Decimal?     @db.Decimal(10, 2) // Nullable
+  start_at            DateTime
+  expires_at          DateTime
+  usage_limit         Int?         // Nullable: không giới hạn số lần dùng
+  status              CommonStatus @default(ACTIVE)
+  created_at          DateTime     @default(now())
+  updated_at          DateTime     @updatedAt
+
+  // Quan hệ
+  orders Order[]
+}
+
+model Order {
+  order_id         Int         @id @default(autoincrement())
+  totalPrice       Decimal     @db.Decimal(15, 2) // Tổng tiền đơn hàng
+  receiver_name    String
+  receiver_phone   String      @db.VarChar(15)
+  shipping_address String      @db.Text
+  discount_amount  Decimal     @default(0) @db.Decimal(10, 2)
+  status           OrderStatus @default(PENDING)
+  created_at       DateTime    @default(now())
+  updated_at       DateTime    @updatedAt
+
+  // Khóa ngoại User
+  user_id Int
+  user    User @relation(fields: [user_id], references: [user_id])
+
+  // Khóa ngoại Discount (Có thể Null nếu không dùng mã)
+  discount_id Int?
+  discount    Discount? @relation(fields: [discount_id], references: [discount_id])
+
+  // Quan hệ
+  items OrderItem[]
+}
+
+model OrderItem {
+  orderitem_id Int     @id @default(autoincrement())
+  quantity     Int
+  price        Decimal @db.Decimal(10, 2) // Giá tại thời điểm mua
+  status       String?                    // Trạng thái item (nếu cần)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  // Khóa ngoại
+  order_id Int
+  order    Order @relation(fields: [order_id], references: [order_id])
+
+  book_id Int
+  book    Book @relation(fields: [book_id], references: [book_id])
+}

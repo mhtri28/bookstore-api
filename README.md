@@ -1,4 +1,4 @@
-Pull code → sửa .env → chạy:
+cp .env.example .env
 
 npm install
 

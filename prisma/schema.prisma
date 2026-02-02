@@ -159,6 +159,7 @@ model Discount {
   min_order_value     Decimal?     @db.Decimal(10, 2) // Nullable
   start_at            DateTime
   expires_at          DateTime
+  used_count          Int
   usage_limit         Int?         // Nullable: không giới hạn số lần dùng
   status              CommonStatus @default(ACTIVE)
   created_at          DateTime     @default(now())

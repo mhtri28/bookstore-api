@@ -1,15 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { DiscountsService } from './discounts.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
+import { ApplyDiscountDto } from './dto/apply-discount.dto';
 
 @Controller('discounts')
 export class DiscountsController {
   constructor(private readonly discountsService: DiscountsService) {}
 
   @Post()
-  create(@Body() createDiscountDto: CreateDiscountDto) {
-    return this.discountsService.create(createDiscountDto);
+  create(@Body() dto: CreateDiscountDto) {
+    return this.discountsService.create(dto);
   }
 
   @Get()
@@ -18,17 +28,25 @@ export class DiscountsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.discountsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.discountsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiscountDto: UpdateDiscountDto) {
-    return this.discountsService.update(+id, updateDiscountDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateDiscountDto,
+  ) {
+    return this.discountsService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.discountsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.discountsService.remove(id);
+  }
+
+  @Post('apply')
+  applyDiscount(@Body() dto: ApplyDiscountDto) {
+    return this.discountsService.applyDiscount(dto);
   }
 }

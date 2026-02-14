@@ -42,7 +42,6 @@ export type AddressMinAggregateOutputType = {
   phone: string | null
   shipping_address: string | null
   isDefault: boolean | null
-  status: $Enums.CommonStatus | null
   created_at: Date | null
   updated_at: Date | null
   user_id: number | null
@@ -54,7 +53,6 @@ export type AddressMaxAggregateOutputType = {
   phone: string | null
   shipping_address: string | null
   isDefault: boolean | null
-  status: $Enums.CommonStatus | null
   created_at: Date | null
   updated_at: Date | null
   user_id: number | null
@@ -66,7 +64,6 @@ export type AddressCountAggregateOutputType = {
   phone: number
   shipping_address: number
   isDefault: number
-  status: number
   created_at: number
   updated_at: number
   user_id: number
@@ -90,7 +87,6 @@ export type AddressMinAggregateInputType = {
   phone?: true
   shipping_address?: true
   isDefault?: true
-  status?: true
   created_at?: true
   updated_at?: true
   user_id?: true
@@ -102,7 +98,6 @@ export type AddressMaxAggregateInputType = {
   phone?: true
   shipping_address?: true
   isDefault?: true
-  status?: true
   created_at?: true
   updated_at?: true
   user_id?: true
@@ -114,7 +109,6 @@ export type AddressCountAggregateInputType = {
   phone?: true
   shipping_address?: true
   isDefault?: true
-  status?: true
   created_at?: true
   updated_at?: true
   user_id?: true
@@ -213,7 +207,6 @@ export type AddressGroupByOutputType = {
   phone: string
   shipping_address: string
   isDefault: boolean
-  status: $Enums.CommonStatus
   created_at: Date
   updated_at: Date
   user_id: number
@@ -248,7 +241,6 @@ export type AddressWhereInput = {
   phone?: Prisma.StringFilter<"Address"> | string
   shipping_address?: Prisma.StringFilter<"Address"> | string
   isDefault?: Prisma.BoolFilter<"Address"> | boolean
-  status?: Prisma.EnumCommonStatusFilter<"Address"> | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   user_id?: Prisma.IntFilter<"Address"> | number
@@ -261,7 +253,6 @@ export type AddressOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   shipping_address?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
@@ -278,7 +269,6 @@ export type AddressWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"Address"> | string
   shipping_address?: Prisma.StringFilter<"Address"> | string
   isDefault?: Prisma.BoolFilter<"Address"> | boolean
-  status?: Prisma.EnumCommonStatusFilter<"Address"> | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   user_id?: Prisma.IntFilter<"Address"> | number
@@ -291,7 +281,6 @@ export type AddressOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   shipping_address?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
@@ -311,7 +300,6 @@ export type AddressScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"Address"> | string
   shipping_address?: Prisma.StringWithAggregatesFilter<"Address"> | string
   isDefault?: Prisma.BoolWithAggregatesFilter<"Address"> | boolean
-  status?: Prisma.EnumCommonStatusWithAggregatesFilter<"Address"> | $Enums.CommonStatus
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Address"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Address"> | Date | string
   user_id?: Prisma.IntWithAggregatesFilter<"Address"> | number
@@ -322,7 +310,6 @@ export type AddressCreateInput = {
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
   user: Prisma.UserCreateNestedOneWithoutAddressesInput
@@ -334,7 +321,6 @@ export type AddressUncheckedCreateInput = {
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
   user_id: number
@@ -345,7 +331,6 @@ export type AddressUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutAddressesNestedInput
@@ -357,7 +342,6 @@ export type AddressUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
@@ -369,7 +353,6 @@ export type AddressCreateManyInput = {
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
   user_id: number
@@ -380,7 +363,6 @@ export type AddressUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -391,7 +373,6 @@ export type AddressUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user_id?: Prisma.IntFieldUpdateOperationsInput | number
@@ -419,7 +400,6 @@ export type AddressCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   shipping_address?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
@@ -436,7 +416,6 @@ export type AddressMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   shipping_address?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
@@ -448,7 +427,6 @@ export type AddressMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   shipping_address?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
@@ -505,16 +483,11 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type EnumCommonStatusFieldUpdateOperationsInput = {
-  set?: $Enums.CommonStatus
-}
-
 export type AddressCreateWithoutUserInput = {
   name: string
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -525,7 +498,6 @@ export type AddressUncheckedCreateWithoutUserInput = {
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -565,7 +537,6 @@ export type AddressScalarWhereInput = {
   phone?: Prisma.StringFilter<"Address"> | string
   shipping_address?: Prisma.StringFilter<"Address"> | string
   isDefault?: Prisma.BoolFilter<"Address"> | boolean
-  status?: Prisma.EnumCommonStatusFilter<"Address"> | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Address"> | Date | string
   user_id?: Prisma.IntFilter<"Address"> | number
@@ -577,7 +548,6 @@ export type AddressCreateManyUserInput = {
   phone: string
   shipping_address: string
   isDefault?: boolean
-  status?: $Enums.CommonStatus
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -587,7 +557,6 @@ export type AddressUpdateWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -598,7 +567,6 @@ export type AddressUncheckedUpdateWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -609,7 +577,6 @@ export type AddressUncheckedUpdateManyWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   shipping_address?: Prisma.StringFieldUpdateOperationsInput | string
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumCommonStatusFieldUpdateOperationsInput | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -622,7 +589,6 @@ export type AddressSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   phone?: boolean
   shipping_address?: boolean
   isDefault?: boolean
-  status?: boolean
   created_at?: boolean
   updated_at?: boolean
   user_id?: boolean
@@ -637,13 +603,12 @@ export type AddressSelectScalar = {
   phone?: boolean
   shipping_address?: boolean
   isDefault?: boolean
-  status?: boolean
   created_at?: boolean
   updated_at?: boolean
   user_id?: boolean
 }
 
-export type AddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"address_id" | "name" | "phone" | "shipping_address" | "isDefault" | "status" | "created_at" | "updated_at" | "user_id", ExtArgs["result"]["address"]>
+export type AddressOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"address_id" | "name" | "phone" | "shipping_address" | "isDefault" | "created_at" | "updated_at" | "user_id", ExtArgs["result"]["address"]>
 export type AddressInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -659,7 +624,6 @@ export type $AddressPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     phone: string
     shipping_address: string
     isDefault: boolean
-    status: $Enums.CommonStatus
     created_at: Date
     updated_at: Date
     user_id: number
@@ -1038,7 +1002,6 @@ export interface AddressFieldRefs {
   readonly phone: Prisma.FieldRef<"Address", 'String'>
   readonly shipping_address: Prisma.FieldRef<"Address", 'String'>
   readonly isDefault: Prisma.FieldRef<"Address", 'Boolean'>
-  readonly status: Prisma.FieldRef<"Address", 'CommonStatus'>
   readonly created_at: Prisma.FieldRef<"Address", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"Address", 'DateTime'>
   readonly user_id: Prisma.FieldRef<"Address", 'Int'>

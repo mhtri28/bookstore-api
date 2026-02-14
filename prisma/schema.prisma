@@ -81,7 +81,6 @@ model Address {
   phone            String       @db.VarChar(15)
   shipping_address String       @db.Text
   isDefault        Boolean      @default(false)
-  status           CommonStatus @default(ACTIVE)
   created_at       DateTime     @default(now())
   updated_at       DateTime     @updatedAt
 

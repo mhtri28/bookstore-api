@@ -30,7 +30,6 @@ CREATE TABLE `Address` (
     `phone` VARCHAR(15) NOT NULL,
     `shipping_address` TEXT NOT NULL,
     `isDefault` BOOLEAN NOT NULL DEFAULT false,
-    `status` ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
     `user_id` INTEGER NOT NULL,

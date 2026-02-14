@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SharedModule } from 'src/shared/shared.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UsersModule } from 'src/modules/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -12,6 +13,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     }),
     SharedModule,
     AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

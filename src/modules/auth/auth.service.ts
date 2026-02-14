@@ -3,7 +3,7 @@ import { UserStatus } from 'src/generated/prisma/browser';
 import { LoginBodyDTO } from 'src/modules/auth/dto/login.dto';
 import { RegisterBodyDTO } from 'src/modules/auth/dto/register.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { isNotFoundPrismaError, isUniqueConstraintPrismaError } from 'src/shared/helpers';
+import { isNotFoundPrismaError, isUniqueConstraintPrismaError } from 'src/shared/helpers/prisma-error.helper';
 import { UserModel } from 'src/shared/models/user.model';
 import { HashingService } from 'src/shared/services/hashing.service';
 import { TokenService } from 'src/shared/services/token.service';
@@ -89,6 +89,9 @@ export class AuthService {
     } catch (error) {
       if (isNotFoundPrismaError(error)) {
         throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
+      }
+      if (error instanceof UnauthorizedException) {
+        throw error;
       }
       throw new InternalServerErrorException('Đăng nhập thất bại');
     }

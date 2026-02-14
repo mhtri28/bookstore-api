@@ -391,6 +391,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type EnumCommonStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CommonStatus
+}
+
 export type CategoryCreateNestedOneWithoutBooksInput = {
   create?: Prisma.XOR<Prisma.CategoryCreateWithoutBooksInput, Prisma.CategoryUncheckedCreateWithoutBooksInput>
   connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutBooksInput

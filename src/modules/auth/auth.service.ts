@@ -1,9 +1,9 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {  Injectable,  UnauthorizedException } from '@nestjs/common';
 import { UserStatus } from 'src/generated/prisma/browser';
 import { LoginBodyDTO } from 'src/modules/auth/dto/login.dto';
 import { RegisterBodyDTO } from 'src/modules/auth/dto/register.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { isNotFoundPrismaError, isUniqueConstraintPrismaError } from 'src/shared/helpers/prisma-error.helper';
+import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper';
 import { UserModel } from 'src/shared/models/user.model';
 import { HashingService } from 'src/shared/services/hashing.service';
 import { TokenService } from 'src/shared/services/token.service';
@@ -31,10 +31,10 @@ export class AuthService {
         user: new UserModel(user),
       };
     } catch (error) {
-      if (isUniqueConstraintPrismaError(error)) {
-        throw new ConflictException('Email đã tồn tại');
-      }
-      throw new InternalServerErrorException('Đăng ký thất bại');
+      handlePrismaError(error, {
+        uniqueMessage: 'Email đã tồn tại',
+        defaultMessage: 'Đăng ký thất bại',
+      });
     }
   }
 
@@ -87,13 +87,10 @@ export class AuthService {
         user: new UserModel(user),
       };
     } catch (error) {
-      if (isNotFoundPrismaError(error)) {
-        throw new UnauthorizedException('Email hoặc mật khẩu không đúng');
-      }
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Đăng nhập thất bại');
+      handlePrismaError(error, {
+        notFoundMessage: 'Email hoặc mật khẩu không đúng',
+        defaultMessage: 'Đăng nhập thất bại',
+      });
     }
   }
 
@@ -124,10 +121,10 @@ export class AuthService {
     } catch (error) {
       // Trường hợp đã refresh token rồi, hãy thông báo cho user biết
       // refresh token của họ đã bị đánh cắp
-      if (isNotFoundPrismaError(error)) {
-        throw new UnauthorizedException('Refresh token không hợp lệ hoặc đã bị sử dụng');
-      }
-      throw new UnauthorizedException('Refresh token không hợp lệ');
+      handlePrismaError(error, {
+        notFoundMessage: 'Refresh token không hợp lệ hoặc đã bị sử dụng',
+        defaultMessage: 'Làm mới token thất bại',
+      });
     }
   }
 
@@ -147,10 +144,10 @@ export class AuthService {
     } catch (error) {
       // Trường hợp đã refresh token rồi, hãy thông báo cho user biết
       // refresh token của họ đã bị đánh cắp
-      if (isNotFoundPrismaError(error)) {
-        throw new UnauthorizedException('Refresh token không hợp lệ hoặc đã bị sử dụng');
-      }
-      throw new UnauthorizedException('Refresh token không hợp lệ');
+      handlePrismaError(error, {
+        notFoundMessage: 'Refresh token không hợp lệ hoặc đã bị sử dụng',
+        defaultMessage: 'Đăng xuất thất bại',
+      });
     }
   }
 }

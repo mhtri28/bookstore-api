@@ -110,7 +110,6 @@ export const AddressScalarFieldEnum = {
   phone: 'phone',
   shipping_address: 'shipping_address',
   isDefault: 'isDefault',
-  status: 'status',
   created_at: 'created_at',
   updated_at: 'updated_at',
   user_id: 'user_id'

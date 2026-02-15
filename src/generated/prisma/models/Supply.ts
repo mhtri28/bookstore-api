@@ -28,86 +28,72 @@ export type AggregateSupply = {
 
 export type SupplyAvgAggregateOutputType = {
   supply_id: number | null
-  quantity: number | null
-  imported_price: runtime.Decimal | null
-  book_id: number | null
+  total_amount: runtime.Decimal | null
 }
 
 export type SupplySumAggregateOutputType = {
   supply_id: number | null
-  quantity: number | null
-  imported_price: runtime.Decimal | null
-  book_id: number | null
+  total_amount: runtime.Decimal | null
 }
 
 export type SupplyMinAggregateOutputType = {
   supply_id: number | null
-  quantity: number | null
-  imported_price: runtime.Decimal | null
   imported_at: Date | null
+  updated_at: Date | null
+  total_amount: runtime.Decimal | null
   status: $Enums.SupplyStatus | null
-  book_id: number | null
 }
 
 export type SupplyMaxAggregateOutputType = {
   supply_id: number | null
-  quantity: number | null
-  imported_price: runtime.Decimal | null
   imported_at: Date | null
+  updated_at: Date | null
+  total_amount: runtime.Decimal | null
   status: $Enums.SupplyStatus | null
-  book_id: number | null
 }
 
 export type SupplyCountAggregateOutputType = {
   supply_id: number
-  quantity: number
-  imported_price: number
   imported_at: number
+  updated_at: number
+  total_amount: number
   status: number
-  book_id: number
   _all: number
 }
 
 
 export type SupplyAvgAggregateInputType = {
   supply_id?: true
-  quantity?: true
-  imported_price?: true
-  book_id?: true
+  total_amount?: true
 }
 
 export type SupplySumAggregateInputType = {
   supply_id?: true
-  quantity?: true
-  imported_price?: true
-  book_id?: true
+  total_amount?: true
 }
 
 export type SupplyMinAggregateInputType = {
   supply_id?: true
-  quantity?: true
-  imported_price?: true
   imported_at?: true
+  updated_at?: true
+  total_amount?: true
   status?: true
-  book_id?: true
 }
 
 export type SupplyMaxAggregateInputType = {
   supply_id?: true
-  quantity?: true
-  imported_price?: true
   imported_at?: true
+  updated_at?: true
+  total_amount?: true
   status?: true
-  book_id?: true
 }
 
 export type SupplyCountAggregateInputType = {
   supply_id?: true
-  quantity?: true
-  imported_price?: true
   imported_at?: true
+  updated_at?: true
+  total_amount?: true
   status?: true
-  book_id?: true
   _all?: true
 }
 
@@ -199,11 +185,10 @@ export type SupplyGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type SupplyGroupByOutputType = {
   supply_id: number
-  quantity: number
-  imported_price: runtime.Decimal
   imported_at: Date
+  updated_at: Date
+  total_amount: runtime.Decimal
   status: $Enums.SupplyStatus
-  book_id: number
   _count: SupplyCountAggregateOutputType | null
   _avg: SupplyAvgAggregateOutputType | null
   _sum: SupplySumAggregateOutputType | null
@@ -231,22 +216,20 @@ export type SupplyWhereInput = {
   OR?: Prisma.SupplyWhereInput[]
   NOT?: Prisma.SupplyWhereInput | Prisma.SupplyWhereInput[]
   supply_id?: Prisma.IntFilter<"Supply"> | number
-  quantity?: Prisma.IntFilter<"Supply"> | number
-  imported_price?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  total_amount?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
-  book_id?: Prisma.IntFilter<"Supply"> | number
-  book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>
+  details?: Prisma.SupplyDetailListRelationFilter
 }
 
 export type SupplyOrderByWithRelationInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
   imported_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
-  book?: Prisma.BookOrderByWithRelationInput
+  details?: Prisma.SupplyDetailOrderByRelationAggregateInput
 }
 
 export type SupplyWhereUniqueInput = Prisma.AtLeast<{
@@ -254,21 +237,19 @@ export type SupplyWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SupplyWhereInput | Prisma.SupplyWhereInput[]
   OR?: Prisma.SupplyWhereInput[]
   NOT?: Prisma.SupplyWhereInput | Prisma.SupplyWhereInput[]
-  quantity?: Prisma.IntFilter<"Supply"> | number
-  imported_price?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  total_amount?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
-  book_id?: Prisma.IntFilter<"Supply"> | number
-  book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>
+  details?: Prisma.SupplyDetailListRelationFilter
 }, "supply_id">
 
 export type SupplyOrderByWithAggregationInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
   imported_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
   _count?: Prisma.SupplyCountOrderByAggregateInput
   _avg?: Prisma.SupplyAvgOrderByAggregateInput
   _max?: Prisma.SupplyMaxOrderByAggregateInput
@@ -281,293 +262,240 @@ export type SupplyScalarWhereWithAggregatesInput = {
   OR?: Prisma.SupplyScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SupplyScalarWhereWithAggregatesInput | Prisma.SupplyScalarWhereWithAggregatesInput[]
   supply_id?: Prisma.IntWithAggregatesFilter<"Supply"> | number
-  quantity?: Prisma.IntWithAggregatesFilter<"Supply"> | number
-  imported_price?: Prisma.DecimalWithAggregatesFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeWithAggregatesFilter<"Supply"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Supply"> | Date | string
+  total_amount?: Prisma.DecimalWithAggregatesFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusWithAggregatesFilter<"Supply"> | $Enums.SupplyStatus
-  book_id?: Prisma.IntWithAggregatesFilter<"Supply"> | number
 }
 
 export type SupplyCreateInput = {
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
-  book: Prisma.BookCreateNestedOneWithoutSuppliesInput
+  details?: Prisma.SupplyDetailCreateNestedManyWithoutSupplyInput
 }
 
 export type SupplyUncheckedCreateInput = {
   supply_id?: number
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
-  book_id: number
+  details?: Prisma.SupplyDetailUncheckedCreateNestedManyWithoutSupplyInput
 }
 
 export type SupplyUpdateInput = {
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
-  book?: Prisma.BookUpdateOneRequiredWithoutSuppliesNestedInput
+  details?: Prisma.SupplyDetailUpdateManyWithoutSupplyNestedInput
 }
 
 export type SupplyUncheckedUpdateInput = {
   supply_id?: Prisma.IntFieldUpdateOperationsInput | number
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
-  book_id?: Prisma.IntFieldUpdateOperationsInput | number
+  details?: Prisma.SupplyDetailUncheckedUpdateManyWithoutSupplyNestedInput
 }
 
 export type SupplyCreateManyInput = {
   supply_id?: number
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
-  book_id: number
 }
 
 export type SupplyUpdateManyMutationInput = {
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
 }
 
 export type SupplyUncheckedUpdateManyInput = {
   supply_id?: Prisma.IntFieldUpdateOperationsInput | number
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
-  book_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type SupplyListRelationFilter = {
-  every?: Prisma.SupplyWhereInput
-  some?: Prisma.SupplyWhereInput
-  none?: Prisma.SupplyWhereInput
-}
-
-export type SupplyOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type SupplyCountOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
   imported_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
 }
 
 export type SupplyAvgOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
 }
 
 export type SupplyMaxOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
   imported_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
 }
 
 export type SupplyMinOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
   imported_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
 }
 
 export type SupplySumOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
-  quantity?: Prisma.SortOrder
-  imported_price?: Prisma.SortOrder
-  book_id?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
 }
 
-export type SupplyCreateNestedManyWithoutBookInput = {
-  create?: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput> | Prisma.SupplyCreateWithoutBookInput[] | Prisma.SupplyUncheckedCreateWithoutBookInput[]
-  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutBookInput | Prisma.SupplyCreateOrConnectWithoutBookInput[]
-  createMany?: Prisma.SupplyCreateManyBookInputEnvelope
-  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-}
-
-export type SupplyUncheckedCreateNestedManyWithoutBookInput = {
-  create?: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput> | Prisma.SupplyCreateWithoutBookInput[] | Prisma.SupplyUncheckedCreateWithoutBookInput[]
-  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutBookInput | Prisma.SupplyCreateOrConnectWithoutBookInput[]
-  createMany?: Prisma.SupplyCreateManyBookInputEnvelope
-  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-}
-
-export type SupplyUpdateManyWithoutBookNestedInput = {
-  create?: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput> | Prisma.SupplyCreateWithoutBookInput[] | Prisma.SupplyUncheckedCreateWithoutBookInput[]
-  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutBookInput | Prisma.SupplyCreateOrConnectWithoutBookInput[]
-  upsert?: Prisma.SupplyUpsertWithWhereUniqueWithoutBookInput | Prisma.SupplyUpsertWithWhereUniqueWithoutBookInput[]
-  createMany?: Prisma.SupplyCreateManyBookInputEnvelope
-  set?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  disconnect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  delete?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  update?: Prisma.SupplyUpdateWithWhereUniqueWithoutBookInput | Prisma.SupplyUpdateWithWhereUniqueWithoutBookInput[]
-  updateMany?: Prisma.SupplyUpdateManyWithWhereWithoutBookInput | Prisma.SupplyUpdateManyWithWhereWithoutBookInput[]
-  deleteMany?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
-}
-
-export type SupplyUncheckedUpdateManyWithoutBookNestedInput = {
-  create?: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput> | Prisma.SupplyCreateWithoutBookInput[] | Prisma.SupplyUncheckedCreateWithoutBookInput[]
-  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutBookInput | Prisma.SupplyCreateOrConnectWithoutBookInput[]
-  upsert?: Prisma.SupplyUpsertWithWhereUniqueWithoutBookInput | Prisma.SupplyUpsertWithWhereUniqueWithoutBookInput[]
-  createMany?: Prisma.SupplyCreateManyBookInputEnvelope
-  set?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  disconnect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  delete?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
-  update?: Prisma.SupplyUpdateWithWhereUniqueWithoutBookInput | Prisma.SupplyUpdateWithWhereUniqueWithoutBookInput[]
-  updateMany?: Prisma.SupplyUpdateManyWithWhereWithoutBookInput | Prisma.SupplyUpdateManyWithWhereWithoutBookInput[]
-  deleteMany?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
+export type SupplyScalarRelationFilter = {
+  is?: Prisma.SupplyWhereInput
+  isNot?: Prisma.SupplyWhereInput
 }
 
 export type EnumSupplyStatusFieldUpdateOperationsInput = {
   set?: $Enums.SupplyStatus
 }
 
-export type SupplyCreateWithoutBookInput = {
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type SupplyCreateNestedOneWithoutDetailsInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutDetailsInput, Prisma.SupplyUncheckedCreateWithoutDetailsInput>
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutDetailsInput
+  connect?: Prisma.SupplyWhereUniqueInput
+}
+
+export type SupplyUpdateOneRequiredWithoutDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutDetailsInput, Prisma.SupplyUncheckedCreateWithoutDetailsInput>
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutDetailsInput
+  upsert?: Prisma.SupplyUpsertWithoutDetailsInput
+  connect?: Prisma.SupplyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SupplyUpdateToOneWithWhereWithoutDetailsInput, Prisma.SupplyUpdateWithoutDetailsInput>, Prisma.SupplyUncheckedUpdateWithoutDetailsInput>
+}
+
+export type SupplyCreateWithoutDetailsInput = {
   imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
 }
 
-export type SupplyUncheckedCreateWithoutBookInput = {
+export type SupplyUncheckedCreateWithoutDetailsInput = {
   supply_id?: number
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
 }
 
-export type SupplyCreateOrConnectWithoutBookInput = {
+export type SupplyCreateOrConnectWithoutDetailsInput = {
   where: Prisma.SupplyWhereUniqueInput
-  create: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput>
+  create: Prisma.XOR<Prisma.SupplyCreateWithoutDetailsInput, Prisma.SupplyUncheckedCreateWithoutDetailsInput>
 }
 
-export type SupplyCreateManyBookInputEnvelope = {
-  data: Prisma.SupplyCreateManyBookInput | Prisma.SupplyCreateManyBookInput[]
-  skipDuplicates?: boolean
+export type SupplyUpsertWithoutDetailsInput = {
+  update: Prisma.XOR<Prisma.SupplyUpdateWithoutDetailsInput, Prisma.SupplyUncheckedUpdateWithoutDetailsInput>
+  create: Prisma.XOR<Prisma.SupplyCreateWithoutDetailsInput, Prisma.SupplyUncheckedCreateWithoutDetailsInput>
+  where?: Prisma.SupplyWhereInput
 }
 
-export type SupplyUpsertWithWhereUniqueWithoutBookInput = {
-  where: Prisma.SupplyWhereUniqueInput
-  update: Prisma.XOR<Prisma.SupplyUpdateWithoutBookInput, Prisma.SupplyUncheckedUpdateWithoutBookInput>
-  create: Prisma.XOR<Prisma.SupplyCreateWithoutBookInput, Prisma.SupplyUncheckedCreateWithoutBookInput>
+export type SupplyUpdateToOneWithWhereWithoutDetailsInput = {
+  where?: Prisma.SupplyWhereInput
+  data: Prisma.XOR<Prisma.SupplyUpdateWithoutDetailsInput, Prisma.SupplyUncheckedUpdateWithoutDetailsInput>
 }
 
-export type SupplyUpdateWithWhereUniqueWithoutBookInput = {
-  where: Prisma.SupplyWhereUniqueInput
-  data: Prisma.XOR<Prisma.SupplyUpdateWithoutBookInput, Prisma.SupplyUncheckedUpdateWithoutBookInput>
-}
-
-export type SupplyUpdateManyWithWhereWithoutBookInput = {
-  where: Prisma.SupplyScalarWhereInput
-  data: Prisma.XOR<Prisma.SupplyUpdateManyMutationInput, Prisma.SupplyUncheckedUpdateManyWithoutBookInput>
-}
-
-export type SupplyScalarWhereInput = {
-  AND?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
-  OR?: Prisma.SupplyScalarWhereInput[]
-  NOT?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
-  supply_id?: Prisma.IntFilter<"Supply"> | number
-  quantity?: Prisma.IntFilter<"Supply"> | number
-  imported_price?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  imported_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
-  status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
-  book_id?: Prisma.IntFilter<"Supply"> | number
-}
-
-export type SupplyCreateManyBookInput = {
-  supply_id?: number
-  quantity: number
-  imported_price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  imported_at?: Date | string
-  status?: $Enums.SupplyStatus
-}
-
-export type SupplyUpdateWithoutBookInput = {
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+export type SupplyUpdateWithoutDetailsInput = {
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
 }
 
-export type SupplyUncheckedUpdateWithoutBookInput = {
+export type SupplyUncheckedUpdateWithoutDetailsInput = {
   supply_id?: Prisma.IntFieldUpdateOperationsInput | number
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
 }
 
-export type SupplyUncheckedUpdateManyWithoutBookInput = {
-  supply_id?: Prisma.IntFieldUpdateOperationsInput | number
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  imported_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+
+/**
+ * Count Type SupplyCountOutputType
+ */
+
+export type SupplyCountOutputType = {
+  details: number
 }
 
+export type SupplyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  details?: boolean | SupplyCountOutputTypeCountDetailsArgs
+}
+
+/**
+ * SupplyCountOutputType without action
+ */
+export type SupplyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplyCountOutputType
+   */
+  select?: Prisma.SupplyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SupplyCountOutputType without action
+ */
+export type SupplyCountOutputTypeCountDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupplyDetailWhereInput
+}
 
 
 export type SupplySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   supply_id?: boolean
-  quantity?: boolean
-  imported_price?: boolean
   imported_at?: boolean
+  updated_at?: boolean
+  total_amount?: boolean
   status?: boolean
-  book_id?: boolean
-  book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
+  details?: boolean | Prisma.Supply$detailsArgs<ExtArgs>
+  _count?: boolean | Prisma.SupplyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["supply"]>
 
 
 
 export type SupplySelectScalar = {
   supply_id?: boolean
-  quantity?: boolean
-  imported_price?: boolean
   imported_at?: boolean
+  updated_at?: boolean
+  total_amount?: boolean
   status?: boolean
-  book_id?: boolean
 }
 
-export type SupplyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"supply_id" | "quantity" | "imported_price" | "imported_at" | "status" | "book_id", ExtArgs["result"]["supply"]>
+export type SupplyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"supply_id" | "imported_at" | "updated_at" | "total_amount" | "status", ExtArgs["result"]["supply"]>
 export type SupplyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
+  details?: boolean | Prisma.Supply$detailsArgs<ExtArgs>
+  _count?: boolean | Prisma.SupplyCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $SupplyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Supply"
   objects: {
-    book: Prisma.$BookPayload<ExtArgs>
+    details: Prisma.$SupplyDetailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     supply_id: number
-    quantity: number
-    imported_price: runtime.Decimal
     imported_at: Date
+    updated_at: Date
+    total_amount: runtime.Decimal
     status: $Enums.SupplyStatus
-    book_id: number
   }, ExtArgs["result"]["supply"]>
   composites: {}
 }
@@ -908,7 +836,7 @@ readonly fields: SupplyFieldRefs;
  */
 export interface Prisma__SupplyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  book<T extends Prisma.BookDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookDefaultArgs<ExtArgs>>): Prisma.Prisma__BookClient<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  details<T extends Prisma.Supply$detailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Supply$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplyDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -939,11 +867,10 @@ export interface Prisma__SupplyClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface SupplyFieldRefs {
   readonly supply_id: Prisma.FieldRef<"Supply", 'Int'>
-  readonly quantity: Prisma.FieldRef<"Supply", 'Int'>
-  readonly imported_price: Prisma.FieldRef<"Supply", 'Decimal'>
   readonly imported_at: Prisma.FieldRef<"Supply", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"Supply", 'DateTime'>
+  readonly total_amount: Prisma.FieldRef<"Supply", 'Decimal'>
   readonly status: Prisma.FieldRef<"Supply", 'SupplyStatus'>
-  readonly book_id: Prisma.FieldRef<"Supply", 'Int'>
 }
     
 
@@ -1284,6 +1211,30 @@ export type SupplyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Supplies to delete.
    */
   limit?: number
+}
+
+/**
+ * Supply.details
+ */
+export type Supply$detailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupplyDetail
+   */
+  select?: Prisma.SupplyDetailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupplyDetail
+   */
+  omit?: Prisma.SupplyDetailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplyDetailInclude<ExtArgs> | null
+  where?: Prisma.SupplyDetailWhereInput
+  orderBy?: Prisma.SupplyDetailOrderByWithRelationInput | Prisma.SupplyDetailOrderByWithRelationInput[]
+  cursor?: Prisma.SupplyDetailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupplyDetailScalarFieldEnum | Prisma.SupplyDetailScalarFieldEnum[]
 }
 
 /**

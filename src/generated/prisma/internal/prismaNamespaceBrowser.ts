@@ -59,6 +59,7 @@ export const ModelName = {
   Book: 'Book',
   BookAuthor: 'BookAuthor',
   Supply: 'Supply',
+  SupplyDetail: 'SupplyDetail',
   Discount: 'Discount',
   Order: 'Order',
   OrderItem: 'OrderItem'
@@ -169,14 +170,24 @@ export type BookAuthorScalarFieldEnum = (typeof BookAuthorScalarFieldEnum)[keyof
 
 export const SupplyScalarFieldEnum = {
   supply_id: 'supply_id',
-  quantity: 'quantity',
-  imported_price: 'imported_price',
   imported_at: 'imported_at',
-  status: 'status',
-  book_id: 'book_id'
+  updated_at: 'updated_at',
+  total_amount: 'total_amount',
+  status: 'status'
 } as const
 
 export type SupplyScalarFieldEnum = (typeof SupplyScalarFieldEnum)[keyof typeof SupplyScalarFieldEnum]
+
+
+export const SupplyDetailScalarFieldEnum = {
+  supply_detail_id: 'supply_detail_id',
+  quantity: 'quantity',
+  imported_price: 'imported_price',
+  supply_id: 'supply_id',
+  book_id: 'book_id'
+} as const
+
+export type SupplyDetailScalarFieldEnum = (typeof SupplyDetailScalarFieldEnum)[keyof typeof SupplyDetailScalarFieldEnum]
 
 
 export const DiscountScalarFieldEnum = {

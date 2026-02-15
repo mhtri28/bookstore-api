@@ -78,6 +78,11 @@ export type BookAuthor = Prisma.BookAuthorModel
  */
 export type Supply = Prisma.SupplyModel
 /**
+ * Model SupplyDetail
+ * 
+ */
+export type SupplyDetail = Prisma.SupplyDetailModel
+/**
  * Model Discount
  * 
  */

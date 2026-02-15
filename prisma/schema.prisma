@@ -129,7 +129,7 @@ model Book {
   // Quan hệ
   bookAuthors BookAuthor[]
   orderItems  OrderItem[]
-  supplies    Supply[]
+  supplyDetails SupplyDetail[]   
 }
 
 // Bảng trung gian Book - Author
@@ -148,16 +148,30 @@ model BookAuthor {
 }
 
 model Supply {
-  supply_id      Int      @id @default(autoincrement())
-  quantity       Int
-  imported_price Decimal  @db.Decimal(10, 2)
-  imported_at    DateTime @default(now())
-  status         SupplyStatus  @default(PENDING)
+  supply_id   Int      @id @default(autoincrement())
+  imported_at DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  total_amount Decimal  @db.Decimal(15, 2)
+  status      SupplyStatus @default(PENDING)
 
-  // Khóa ngoại
+  // Quan hệ
+  details     SupplyDetail[]
+}
+
+model SupplyDetail {
+  supply_detail_id Int @id @default(autoincrement())
+  quantity         Int
+  imported_price   Decimal @db.Decimal(10,2)
+
+  // Khóa ngoại Supply
+  supply_id Int
+  supply    Supply @relation(fields: [supply_id], references: [supply_id])
+
+  // Khóa ngoại Book
   book_id Int
   book    Book @relation(fields: [book_id], references: [book_id])
 }
+
 
 model Discount {
   discount_id         Int          @id @default(autoincrement())

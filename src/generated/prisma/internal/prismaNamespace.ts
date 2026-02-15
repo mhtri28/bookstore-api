@@ -392,6 +392,7 @@ export const ModelName = {
   Book: 'Book',
   BookAuthor: 'BookAuthor',
   Supply: 'Supply',
+  SupplyDetail: 'SupplyDetail',
   Discount: 'Discount',
   Order: 'Order',
   OrderItem: 'OrderItem'
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "refreshToken" | "address" | "category" | "author" | "book" | "bookAuthor" | "supply" | "discount" | "order" | "orderItem"
+    modelProps: "user" | "refreshToken" | "address" | "category" | "author" | "book" | "bookAuthor" | "supply" | "supplyDetail" | "discount" | "order" | "orderItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -942,6 +943,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SupplyDetail: {
+      payload: Prisma.$SupplyDetailPayload<ExtArgs>
+      fields: Prisma.SupplyDetailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupplyDetailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupplyDetailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        findFirst: {
+          args: Prisma.SupplyDetailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupplyDetailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        findMany: {
+          args: Prisma.SupplyDetailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>[]
+        }
+        create: {
+          args: Prisma.SupplyDetailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        createMany: {
+          args: Prisma.SupplyDetailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SupplyDetailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        update: {
+          args: Prisma.SupplyDetailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        deleteMany: {
+          args: Prisma.SupplyDetailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupplyDetailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SupplyDetailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupplyDetailPayload>
+        }
+        aggregate: {
+          args: Prisma.SupplyDetailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupplyDetail>
+        }
+        groupBy: {
+          args: Prisma.SupplyDetailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyDetailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupplyDetailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupplyDetailCountAggregateOutputType> | number
+        }
+      }
+    }
     Discount: {
       payload: Prisma.$DiscountPayload<ExtArgs>
       fields: Prisma.DiscountFieldRefs
@@ -1268,14 +1335,24 @@ export type BookAuthorScalarFieldEnum = (typeof BookAuthorScalarFieldEnum)[keyof
 
 export const SupplyScalarFieldEnum = {
   supply_id: 'supply_id',
-  quantity: 'quantity',
-  imported_price: 'imported_price',
   imported_at: 'imported_at',
-  status: 'status',
-  book_id: 'book_id'
+  updated_at: 'updated_at',
+  total_amount: 'total_amount',
+  status: 'status'
 } as const
 
 export type SupplyScalarFieldEnum = (typeof SupplyScalarFieldEnum)[keyof typeof SupplyScalarFieldEnum]
+
+
+export const SupplyDetailScalarFieldEnum = {
+  supply_detail_id: 'supply_detail_id',
+  quantity: 'quantity',
+  imported_price: 'imported_price',
+  supply_id: 'supply_id',
+  book_id: 'book_id'
+} as const
+
+export type SupplyDetailScalarFieldEnum = (typeof SupplyDetailScalarFieldEnum)[keyof typeof SupplyDetailScalarFieldEnum]
 
 
 export const DiscountScalarFieldEnum = {
@@ -1609,6 +1686,7 @@ export type GlobalOmitConfig = {
   book?: Prisma.BookOmit
   bookAuthor?: Prisma.BookAuthorOmit
   supply?: Prisma.SupplyOmit
+  supplyDetail?: Prisma.SupplyDetailOmit
   discount?: Prisma.DiscountOmit
   order?: Prisma.OrderOmit
   orderItem?: Prisma.OrderItemOmit

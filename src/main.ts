@@ -16,11 +16,10 @@ async function bootstrap() {
         enableImplicitConversion: true, // Cho phép chuyển đổi kiểu dữ liệu một cách ngầm định
       },
       exceptionFactory: (ValidationErrors) => {
-        console.log(ValidationErrors);
         return new UnprocessableEntityException(
           ValidationErrors.map((error) => ({
             field: error.property,
-            errors: Object.values(error.constraints as any).join(', '),
+            errors: error.constraints ? Object.values(error.constraints).join(', ') : 'Invalid value',
           })),
         );
       },

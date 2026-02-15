@@ -90,13 +90,23 @@ CREATE TABLE `BookAuthor` (
 -- CreateTable
 CREATE TABLE `Supply` (
     `supply_id` INTEGER NOT NULL AUTO_INCREMENT,
-    `quantity` INTEGER NOT NULL,
-    `imported_price` DECIMAL(10, 2) NOT NULL,
     `imported_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+    `total_amount` DECIMAL(15, 2) NOT NULL,
     `status` ENUM('PENDING', 'DONE', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
-    `book_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`supply_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `SupplyDetail` (
+    `supply_detail_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `quantity` INTEGER NOT NULL,
+    `imported_price` DECIMAL(10, 2) NOT NULL,
+    `supply_id` INTEGER NOT NULL,
+    `book_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`supply_detail_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -167,7 +177,10 @@ ALTER TABLE `BookAuthor` ADD CONSTRAINT `BookAuthor_book_id_fkey` FOREIGN KEY (`
 ALTER TABLE `BookAuthor` ADD CONSTRAINT `BookAuthor_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `Author`(`author_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Supply` ADD CONSTRAINT `Supply_book_id_fkey` FOREIGN KEY (`book_id`) REFERENCES `Book`(`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `SupplyDetail` ADD CONSTRAINT `SupplyDetail_supply_id_fkey` FOREIGN KEY (`supply_id`) REFERENCES `Supply`(`supply_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SupplyDetail` ADD CONSTRAINT `SupplyDetail_book_id_fkey` FOREIGN KEY (`book_id`) REFERENCES `Book`(`book_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Order` ADD CONSTRAINT `Order_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;

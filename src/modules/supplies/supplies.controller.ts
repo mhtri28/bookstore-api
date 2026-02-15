@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query } from '@nestjs/common';
 import { SuppliesService } from './supplies.service';
-import { CreateSupplyDto } from './dto/create-supply.dto';
-import { UpdateSupplyDto } from './dto/update-supply.dto';
+import { UpdateSupplyBodyDTO, UpdateSupplyResDTO } from './dto/update-supply.dto';
+import { Role } from 'src/generated/prisma/browser';
+import { Auth } from 'src/shared/decorators/auth.decorator';
+import { CreateSupplyBodyDTO, CreateSupplyResDTO } from 'src/modules/supplies/dto/create-supply.dto';
+import { GetSuppliesQueryDTO } from 'src/modules/supplies/dto/get-supplies-query.dto';
+import { GetSupplyResDTO } from 'src/modules/supplies/dto/get-supply.dto';
 
+@Auth(Role.ADMIN)
 @Controller('supplies')
 export class SuppliesController {
   constructor(private readonly suppliesService: SuppliesService) {}
 
   @Post()
-  create(@Body() createSupplyDto: CreateSupplyDto) {
-    return this.suppliesService.create(createSupplyDto);
+  async create(@Body() body: CreateSupplyBodyDTO) {
+    const result = await this.suppliesService.create(body);
+    return new CreateSupplyResDTO(result);
   }
 
   @Get()
-  findAll() {
-    return this.suppliesService.findAll();
+  findAll(@Query() query: GetSuppliesQueryDTO) {
+    return this.suppliesService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.suppliesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const result = await this.suppliesService.findOne(Number(id));
+    return new GetSupplyResDTO(result);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplyDto: UpdateSupplyDto) {
-    return this.suppliesService.update(+id, updateSupplyDto);
+  async update(@Param('id') id: string, @Body() body: UpdateSupplyBodyDTO) {
+    const result = await this.suppliesService.update(Number(id), body);
+    return new UpdateSupplyResDTO(result);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.suppliesService.remove(+id);
+  @Patch(':id/cancel')
+  cancel(@Param('id') id: string) {
+    return this.suppliesService.cancel(Number(id));
+  }
+
+  @Patch(':id/complete')
+  complete(@Param('id') id: string) {
+    return this.suppliesService.complete(Number(id));
   }
 }

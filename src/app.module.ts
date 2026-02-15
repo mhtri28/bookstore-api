@@ -7,6 +7,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AddressesModule } from 'src/modules/addresses/addresses.module';
+import { SuppliesModule } from 'src/modules/supplies/supplies.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,6 +17,7 @@ import { AddressesModule } from 'src/modules/addresses/addresses.module';
     AuthModule,
     UsersModule,
     AddressesModule,
+    SuppliesModule,
   ],
   controllers: [AppController],
   providers: [

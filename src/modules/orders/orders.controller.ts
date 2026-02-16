@@ -8,26 +8,16 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { OrderStatus, Prisma } from '../../generated/prisma/client';
+import { OrderStatus } from '../../generated/prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-
-type OrderWithRelations = Prisma.OrderGetPayload<{
-  include: {
-    items: {
-      include: {
-        book: true;
-      };
-    };
-    discount: true;
-  };
-}>;
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('orders')
+@ApiTags('Orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  private mapOrder(order: OrderWithRelations) {
+  private mapOrder(order: any) {
     return {
       order_id: order.order_id,
       status: order.status,
@@ -51,28 +41,19 @@ export class OrdersController {
     @Body() dto: CreateOrderDto,
   ) {
     const order = await this.ordersService.create(userId, dto);
-    return this.mapOrder(order as unknown as OrderWithRelations);
+    return this.mapOrder(order);
   }
 
   @Get()
   async findAll() {
     const orders = await this.ordersService.findAll();
-    return orders.map((o) => this.mapOrder(o as unknown as OrderWithRelations));
+    return orders.map((o) => this.mapOrder(o));
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const order = await this.ordersService.findOne(id);
-    return this.mapOrder(order as unknown as OrderWithRelations);
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateOrderDto,
-  ) {
-    const order = await this.ordersService.update(id, dto);
-    return this.mapOrder(order as unknown as OrderWithRelations);
+    return this.mapOrder(order);
   }
 
   @Patch(':id/status')
@@ -81,6 +62,6 @@ export class OrdersController {
     @Body('status') status: OrderStatus,
   ) {
     const order = await this.ordersService.updateStatus(id, status);
-    return this.mapOrder(order as unknown as OrderWithRelations);
+    return this.mapOrder(order);
   }
 }

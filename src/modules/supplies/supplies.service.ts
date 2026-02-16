@@ -228,26 +228,45 @@ export class SuppliesService {
 
   async complete(id: number) {
     try {
-      // 1. Kiểm tra phiếu nhập có tồn tại không
-      const currentSupply = await this.prismaService.supply.findUniqueOrThrow({
-        where: {
-          supply_id: id,
-        },
-      });
+      await this.prismaService.$transaction(async (tx) => {
+        // 1. Kiểm tra phiếu nhập có tồn tại không
+        const currentSupply = await tx.supply.findUniqueOrThrow({
+          where: {
+            supply_id: id,
+          },
+          include: {
+            details: true,
+          },
+        });
 
-      // 2. Kiểm tra phiếu nhập có đang ở trạng thái chờ không
-      if (currentSupply.status !== SupplyStatus.PENDING) {
-        throw new ForbiddenException('Chỉ có thể hoàn thành phiếu nhập ở trạng thái chờ');
-      }
+        // 2. Kiểm tra phiếu nhập có đang ở trạng thái chờ không
+        if (currentSupply.status !== SupplyStatus.PENDING) {
+          throw new ForbiddenException('Chỉ có thể hoàn thành phiếu nhập ở trạng thái chờ');
+        }
 
-      // 3. Cập nhật trạng thái sang COMPLETED
-      await this.prismaService.supply.update({
-        where: {
-          supply_id: id,
-        },
-        data: {
-          status: SupplyStatus.DONE,
-        },
+        // 3. Cập nhật trạng thái sang COMPLETED
+        await tx.supply.update({
+          where: {
+            supply_id: id,
+          },
+          data: {
+            status: SupplyStatus.DONE,
+          },
+        });
+
+        // 4. Cập nhật tồn kho của sách
+        for (const detail of currentSupply.details) {
+          await tx.book.update({
+            where: {
+              book_id: detail.book_id,
+            },
+            data: {
+              stock: {
+                increment: detail.quantity,
+              },
+            },
+          });
+        }
       });
 
       return {

@@ -4,14 +4,13 @@ datasource db {
   provider = "mysql"
 }
 
-
 generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
-  moduleFormat    = "cjs"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
-// ENUM nha mấy ní
+// ENUM
 
 enum Role {
   USER
@@ -36,6 +35,7 @@ enum DiscountType {
   PERCENTAGE
   FIXED_AMOUNT
 }
+
 enum SupplyStatus {
   PENDING
   DONE
@@ -59,32 +59,29 @@ model User {
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
 
-  // Quan hệ
   addresses     Address[]
   orders        Order[]
   refreshTokens RefreshToken[]
 }
 
 model RefreshToken {
-  token      String   @unique 
+  token      String   @unique
   expires_at DateTime
   created_at DateTime @default(now())
 
-  // Khóa ngoại
   user_id Int
   user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
 
 model Address {
-  address_id       Int          @id @default(autoincrement())
-  name             String       // Tên người nhận tại địa chỉ này
-  phone            String       @db.VarChar(15)
-  shipping_address String       @db.Text
-  isDefault        Boolean      @default(false)
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
+  address_id       Int      @id @default(autoincrement())
+  name             String
+  phone            String   @db.VarChar(15)
+  shipping_address String   @db.Text
+  isDefault        Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 
-  // Khóa ngoại
   user_id Int
   user    User @relation(fields: [user_id], references: [user_id])
 }
@@ -92,12 +89,11 @@ model Address {
 model Category {
   category_id Int          @id @default(autoincrement())
   name        String
-  description String?      @db.Text // Có thể null
+  description String?      @db.Text
   status      CommonStatus @default(ACTIVE)
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
 
-  // Quan hệ
   books Book[]
 }
 
@@ -108,7 +104,6 @@ model Author {
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
 
-  // Quan hệ
   bookAuthors BookAuthor[]
 }
 
@@ -122,80 +117,92 @@ model Book {
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
 
-  // Khóa ngoại
   category_id Int
   category    Category @relation(fields: [category_id], references: [category_id])
 
-  // Quan hệ
-  bookAuthors BookAuthor[]
-  orderItems  OrderItem[]
-  supplyDetails SupplyDetail[]   
+  bookAuthors  BookAuthor[]
+  orderItems   OrderItem[]
+  supplyDetails SupplyDetail[]
 }
 
-// Bảng trung gian Book - Author
 model BookAuthor {
   bookauthor_id Int      @id @default(autoincrement())
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
-  // Khóa ngoại
   book_id   Int
   book      Book   @relation(fields: [book_id], references: [book_id])
   author_id Int
   author    Author @relation(fields: [author_id], references: [author_id])
 
-  @@unique([book_id, author_id]) // Chống trùng lặp cặp Book-Author
+  @@unique([book_id, author_id])
+}
+
+//////////////////////
+//  NEW: SUPPLIER  //
+//////////////////////
+
+model Supplier {
+  supplier_id Int          @id @default(autoincrement())
+  name        String
+  email       String?      @unique
+  phone String? @unique @db.VarChar(15)
+  address     String?      @db.Text
+  status      CommonStatus @default(ACTIVE)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  supplies Supply[]
 }
 
 model Supply {
-  supply_id   Int      @id @default(autoincrement())
-  imported_at DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  total_amount Decimal  @db.Decimal(15, 2)
-  status      SupplyStatus @default(PENDING)
+  supply_id    Int          @id @default(autoincrement())
+  imported_at  DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  total_amount Decimal      @db.Decimal(15, 2)
+  status       SupplyStatus @default(PENDING)
 
-  // Quan hệ
-  details     SupplyDetail[]
+  // FK Supplier
+  supplier_id Int
+  supplier    Supplier @relation(fields: [supplier_id], references: [supplier_id])
+
+  details SupplyDetail[]
 }
 
 model SupplyDetail {
-  supply_detail_id Int @id @default(autoincrement())
+  supply_detail_id Int     @id @default(autoincrement())
   quantity         Int
-  imported_price   Decimal @db.Decimal(10,2)
+  imported_price   Decimal @db.Decimal(10, 2)
 
-  // Khóa ngoại Supply
   supply_id Int
   supply    Supply @relation(fields: [supply_id], references: [supply_id])
 
-  // Khóa ngoại Book
   book_id Int
   book    Book @relation(fields: [book_id], references: [book_id])
 }
 
-
 model Discount {
   discount_id         Int          @id @default(autoincrement())
-  code                String       @unique // Mã giảm giá phải duy nhất
+  code                String       @unique
   description         String?      @db.Text
   discount_type       DiscountType
   discount_value      Decimal      @db.Decimal(10, 2)
-  max_discount_amount Decimal?     @db.Decimal(10, 2) // Nullable nếu không giới hạn
-  min_order_value     Decimal?     @db.Decimal(10, 2) // Nullable
+  max_discount_amount Decimal?     @db.Decimal(10, 2)
+  min_order_value     Decimal?     @db.Decimal(10, 2)
   start_at            DateTime
   expires_at          DateTime
   used_count          Int
-  usage_limit         Int?         // Nullable: không giới hạn số lần dùng
+  usage_limit         Int?
   status              CommonStatus @default(ACTIVE)
   created_at          DateTime     @default(now())
   updated_at          DateTime     @updatedAt
 
-  // Quan hệ
   orders Order[]
 }
 
 model Order {
   order_id         Int         @id @default(autoincrement())
-  totalPrice       Decimal     @db.Decimal(15, 2) // Tổng tiền đơn hàng
+  totalPrice       Decimal     @db.Decimal(15, 2)
   receiver_name    String
   receiver_phone   String      @db.VarChar(15)
   shipping_address String      @db.Text
@@ -204,27 +211,23 @@ model Order {
   created_at       DateTime    @default(now())
   updated_at       DateTime    @updatedAt
 
-  // Khóa ngoại User
   user_id Int
   user    User @relation(fields: [user_id], references: [user_id])
 
-  // Khóa ngoại Discount (Có thể Null nếu không dùng mã)
   discount_id Int?
   discount    Discount? @relation(fields: [discount_id], references: [discount_id])
 
-  // Quan hệ
   items OrderItem[]
 }
 
 model OrderItem {
-  orderitem_id Int     @id @default(autoincrement())
+  orderitem_id Int      @id @default(autoincrement())
   quantity     Int
-  price        Decimal @db.Decimal(10, 2) // Giá tại thời điểm mua
-  status       String?                    // Trạng thái item (nếu cần)
+  price        Decimal  @db.Decimal(10, 2)
+  status       String?
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  // Khóa ngoại
   order_id Int
   order    Order @relation(fields: [order_id], references: [order_id])
 

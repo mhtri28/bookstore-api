@@ -12,7 +12,12 @@ import { DiscountsService } from './discounts.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { ApplyDiscountDto } from './dto/apply-discount.dto';
+import { Role } from 'src/generated/prisma/enums';
+import { Auth } from 'src/shared/decorators/auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@Auth(Role.ADMIN)
+@ApiTags('Discounts')
 @Controller('discounts')
 export class DiscountsController {
   constructor(private readonly discountsService: DiscountsService) {}

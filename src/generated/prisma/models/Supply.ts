@@ -29,11 +29,13 @@ export type AggregateSupply = {
 export type SupplyAvgAggregateOutputType = {
   supply_id: number | null
   total_amount: runtime.Decimal | null
+  supplier_id: number | null
 }
 
 export type SupplySumAggregateOutputType = {
   supply_id: number | null
   total_amount: runtime.Decimal | null
+  supplier_id: number | null
 }
 
 export type SupplyMinAggregateOutputType = {
@@ -42,6 +44,7 @@ export type SupplyMinAggregateOutputType = {
   updated_at: Date | null
   total_amount: runtime.Decimal | null
   status: $Enums.SupplyStatus | null
+  supplier_id: number | null
 }
 
 export type SupplyMaxAggregateOutputType = {
@@ -50,6 +53,7 @@ export type SupplyMaxAggregateOutputType = {
   updated_at: Date | null
   total_amount: runtime.Decimal | null
   status: $Enums.SupplyStatus | null
+  supplier_id: number | null
 }
 
 export type SupplyCountAggregateOutputType = {
@@ -58,6 +62,7 @@ export type SupplyCountAggregateOutputType = {
   updated_at: number
   total_amount: number
   status: number
+  supplier_id: number
   _all: number
 }
 
@@ -65,11 +70,13 @@ export type SupplyCountAggregateOutputType = {
 export type SupplyAvgAggregateInputType = {
   supply_id?: true
   total_amount?: true
+  supplier_id?: true
 }
 
 export type SupplySumAggregateInputType = {
   supply_id?: true
   total_amount?: true
+  supplier_id?: true
 }
 
 export type SupplyMinAggregateInputType = {
@@ -78,6 +85,7 @@ export type SupplyMinAggregateInputType = {
   updated_at?: true
   total_amount?: true
   status?: true
+  supplier_id?: true
 }
 
 export type SupplyMaxAggregateInputType = {
@@ -86,6 +94,7 @@ export type SupplyMaxAggregateInputType = {
   updated_at?: true
   total_amount?: true
   status?: true
+  supplier_id?: true
 }
 
 export type SupplyCountAggregateInputType = {
@@ -94,6 +103,7 @@ export type SupplyCountAggregateInputType = {
   updated_at?: true
   total_amount?: true
   status?: true
+  supplier_id?: true
   _all?: true
 }
 
@@ -189,6 +199,7 @@ export type SupplyGroupByOutputType = {
   updated_at: Date
   total_amount: runtime.Decimal
   status: $Enums.SupplyStatus
+  supplier_id: number
   _count: SupplyCountAggregateOutputType | null
   _avg: SupplyAvgAggregateOutputType | null
   _sum: SupplySumAggregateOutputType | null
@@ -220,6 +231,8 @@ export type SupplyWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
   total_amount?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFilter<"Supply"> | number
+  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
   details?: Prisma.SupplyDetailListRelationFilter
 }
 
@@ -229,6 +242,8 @@ export type SupplyOrderByWithRelationInput = {
   updated_at?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
+  supplier?: Prisma.SupplierOrderByWithRelationInput
   details?: Prisma.SupplyDetailOrderByRelationAggregateInput
 }
 
@@ -241,6 +256,8 @@ export type SupplyWhereUniqueInput = Prisma.AtLeast<{
   updated_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
   total_amount?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFilter<"Supply"> | number
+  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
   details?: Prisma.SupplyDetailListRelationFilter
 }, "supply_id">
 
@@ -250,6 +267,7 @@ export type SupplyOrderByWithAggregationInput = {
   updated_at?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
   _count?: Prisma.SupplyCountOrderByAggregateInput
   _avg?: Prisma.SupplyAvgOrderByAggregateInput
   _max?: Prisma.SupplyMaxOrderByAggregateInput
@@ -266,6 +284,7 @@ export type SupplyScalarWhereWithAggregatesInput = {
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Supply"> | Date | string
   total_amount?: Prisma.DecimalWithAggregatesFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusWithAggregatesFilter<"Supply"> | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntWithAggregatesFilter<"Supply"> | number
 }
 
 export type SupplyCreateInput = {
@@ -273,6 +292,7 @@ export type SupplyCreateInput = {
   updated_at?: Date | string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
+  supplier: Prisma.SupplierCreateNestedOneWithoutSuppliesInput
   details?: Prisma.SupplyDetailCreateNestedManyWithoutSupplyInput
 }
 
@@ -282,6 +302,7 @@ export type SupplyUncheckedCreateInput = {
   updated_at?: Date | string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
+  supplier_id: number
   details?: Prisma.SupplyDetailUncheckedCreateNestedManyWithoutSupplyInput
 }
 
@@ -290,6 +311,7 @@ export type SupplyUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutSuppliesNestedInput
   details?: Prisma.SupplyDetailUpdateManyWithoutSupplyNestedInput
 }
 
@@ -299,6 +321,7 @@ export type SupplyUncheckedUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFieldUpdateOperationsInput | number
   details?: Prisma.SupplyDetailUncheckedUpdateManyWithoutSupplyNestedInput
 }
 
@@ -308,6 +331,7 @@ export type SupplyCreateManyInput = {
   updated_at?: Date | string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
+  supplier_id: number
 }
 
 export type SupplyUpdateManyMutationInput = {
@@ -323,6 +347,17 @@ export type SupplyUncheckedUpdateManyInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type SupplyListRelationFilter = {
+  every?: Prisma.SupplyWhereInput
+  some?: Prisma.SupplyWhereInput
+  none?: Prisma.SupplyWhereInput
+}
+
+export type SupplyOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type SupplyCountOrderByAggregateInput = {
@@ -331,11 +366,13 @@ export type SupplyCountOrderByAggregateInput = {
   updated_at?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
 }
 
 export type SupplyAvgOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
 }
 
 export type SupplyMaxOrderByAggregateInput = {
@@ -344,6 +381,7 @@ export type SupplyMaxOrderByAggregateInput = {
   updated_at?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
 }
 
 export type SupplyMinOrderByAggregateInput = {
@@ -352,16 +390,60 @@ export type SupplyMinOrderByAggregateInput = {
   updated_at?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
 }
 
 export type SupplySumOrderByAggregateInput = {
   supply_id?: Prisma.SortOrder
   total_amount?: Prisma.SortOrder
+  supplier_id?: Prisma.SortOrder
 }
 
 export type SupplyScalarRelationFilter = {
   is?: Prisma.SupplyWhereInput
   isNot?: Prisma.SupplyWhereInput
+}
+
+export type SupplyCreateNestedManyWithoutSupplierInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput> | Prisma.SupplyCreateWithoutSupplierInput[] | Prisma.SupplyUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutSupplierInput | Prisma.SupplyCreateOrConnectWithoutSupplierInput[]
+  createMany?: Prisma.SupplyCreateManySupplierInputEnvelope
+  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+}
+
+export type SupplyUncheckedCreateNestedManyWithoutSupplierInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput> | Prisma.SupplyCreateWithoutSupplierInput[] | Prisma.SupplyUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutSupplierInput | Prisma.SupplyCreateOrConnectWithoutSupplierInput[]
+  createMany?: Prisma.SupplyCreateManySupplierInputEnvelope
+  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+}
+
+export type SupplyUpdateManyWithoutSupplierNestedInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput> | Prisma.SupplyCreateWithoutSupplierInput[] | Prisma.SupplyUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutSupplierInput | Prisma.SupplyCreateOrConnectWithoutSupplierInput[]
+  upsert?: Prisma.SupplyUpsertWithWhereUniqueWithoutSupplierInput | Prisma.SupplyUpsertWithWhereUniqueWithoutSupplierInput[]
+  createMany?: Prisma.SupplyCreateManySupplierInputEnvelope
+  set?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  disconnect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  delete?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  update?: Prisma.SupplyUpdateWithWhereUniqueWithoutSupplierInput | Prisma.SupplyUpdateWithWhereUniqueWithoutSupplierInput[]
+  updateMany?: Prisma.SupplyUpdateManyWithWhereWithoutSupplierInput | Prisma.SupplyUpdateManyWithWhereWithoutSupplierInput[]
+  deleteMany?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
+}
+
+export type SupplyUncheckedUpdateManyWithoutSupplierNestedInput = {
+  create?: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput> | Prisma.SupplyCreateWithoutSupplierInput[] | Prisma.SupplyUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.SupplyCreateOrConnectWithoutSupplierInput | Prisma.SupplyCreateOrConnectWithoutSupplierInput[]
+  upsert?: Prisma.SupplyUpsertWithWhereUniqueWithoutSupplierInput | Prisma.SupplyUpsertWithWhereUniqueWithoutSupplierInput[]
+  createMany?: Prisma.SupplyCreateManySupplierInputEnvelope
+  set?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  disconnect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  delete?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  connect?: Prisma.SupplyWhereUniqueInput | Prisma.SupplyWhereUniqueInput[]
+  update?: Prisma.SupplyUpdateWithWhereUniqueWithoutSupplierInput | Prisma.SupplyUpdateWithWhereUniqueWithoutSupplierInput[]
+  updateMany?: Prisma.SupplyUpdateManyWithWhereWithoutSupplierInput | Prisma.SupplyUpdateManyWithWhereWithoutSupplierInput[]
+  deleteMany?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
 }
 
 export type EnumSupplyStatusFieldUpdateOperationsInput = {
@@ -382,11 +464,67 @@ export type SupplyUpdateOneRequiredWithoutDetailsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SupplyUpdateToOneWithWhereWithoutDetailsInput, Prisma.SupplyUpdateWithoutDetailsInput>, Prisma.SupplyUncheckedUpdateWithoutDetailsInput>
 }
 
+export type SupplyCreateWithoutSupplierInput = {
+  imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SupplyStatus
+  details?: Prisma.SupplyDetailCreateNestedManyWithoutSupplyInput
+}
+
+export type SupplyUncheckedCreateWithoutSupplierInput = {
+  supply_id?: number
+  imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SupplyStatus
+  details?: Prisma.SupplyDetailUncheckedCreateNestedManyWithoutSupplyInput
+}
+
+export type SupplyCreateOrConnectWithoutSupplierInput = {
+  where: Prisma.SupplyWhereUniqueInput
+  create: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput>
+}
+
+export type SupplyCreateManySupplierInputEnvelope = {
+  data: Prisma.SupplyCreateManySupplierInput | Prisma.SupplyCreateManySupplierInput[]
+  skipDuplicates?: boolean
+}
+
+export type SupplyUpsertWithWhereUniqueWithoutSupplierInput = {
+  where: Prisma.SupplyWhereUniqueInput
+  update: Prisma.XOR<Prisma.SupplyUpdateWithoutSupplierInput, Prisma.SupplyUncheckedUpdateWithoutSupplierInput>
+  create: Prisma.XOR<Prisma.SupplyCreateWithoutSupplierInput, Prisma.SupplyUncheckedCreateWithoutSupplierInput>
+}
+
+export type SupplyUpdateWithWhereUniqueWithoutSupplierInput = {
+  where: Prisma.SupplyWhereUniqueInput
+  data: Prisma.XOR<Prisma.SupplyUpdateWithoutSupplierInput, Prisma.SupplyUncheckedUpdateWithoutSupplierInput>
+}
+
+export type SupplyUpdateManyWithWhereWithoutSupplierInput = {
+  where: Prisma.SupplyScalarWhereInput
+  data: Prisma.XOR<Prisma.SupplyUpdateManyMutationInput, Prisma.SupplyUncheckedUpdateManyWithoutSupplierInput>
+}
+
+export type SupplyScalarWhereInput = {
+  AND?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
+  OR?: Prisma.SupplyScalarWhereInput[]
+  NOT?: Prisma.SupplyScalarWhereInput | Prisma.SupplyScalarWhereInput[]
+  supply_id?: Prisma.IntFilter<"Supply"> | number
+  imported_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Supply"> | Date | string
+  total_amount?: Prisma.DecimalFilter<"Supply"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSupplyStatusFilter<"Supply"> | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFilter<"Supply"> | number
+}
+
 export type SupplyCreateWithoutDetailsInput = {
   imported_at?: Date | string
   updated_at?: Date | string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
+  supplier: Prisma.SupplierCreateNestedOneWithoutSuppliesInput
 }
 
 export type SupplyUncheckedCreateWithoutDetailsInput = {
@@ -395,6 +533,7 @@ export type SupplyUncheckedCreateWithoutDetailsInput = {
   updated_at?: Date | string
   total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.SupplyStatus
+  supplier_id: number
 }
 
 export type SupplyCreateOrConnectWithoutDetailsInput = {
@@ -418,9 +557,44 @@ export type SupplyUpdateWithoutDetailsInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutSuppliesNestedInput
 }
 
 export type SupplyUncheckedUpdateWithoutDetailsInput = {
+  supply_id?: Prisma.IntFieldUpdateOperationsInput | number
+  imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  supplier_id?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type SupplyCreateManySupplierInput = {
+  supply_id?: number
+  imported_at?: Date | string
+  updated_at?: Date | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.SupplyStatus
+}
+
+export type SupplyUpdateWithoutSupplierInput = {
+  imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  details?: Prisma.SupplyDetailUpdateManyWithoutSupplyNestedInput
+}
+
+export type SupplyUncheckedUpdateWithoutSupplierInput = {
+  supply_id?: Prisma.IntFieldUpdateOperationsInput | number
+  imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumSupplyStatusFieldUpdateOperationsInput | $Enums.SupplyStatus
+  details?: Prisma.SupplyDetailUncheckedUpdateManyWithoutSupplyNestedInput
+}
+
+export type SupplyUncheckedUpdateManyWithoutSupplierInput = {
   supply_id?: Prisma.IntFieldUpdateOperationsInput | number
   imported_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -465,6 +639,8 @@ export type SupplySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   updated_at?: boolean
   total_amount?: boolean
   status?: boolean
+  supplier_id?: boolean
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   details?: boolean | Prisma.Supply$detailsArgs<ExtArgs>
   _count?: boolean | Prisma.SupplyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["supply"]>
@@ -477,10 +653,12 @@ export type SupplySelectScalar = {
   updated_at?: boolean
   total_amount?: boolean
   status?: boolean
+  supplier_id?: boolean
 }
 
-export type SupplyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"supply_id" | "imported_at" | "updated_at" | "total_amount" | "status", ExtArgs["result"]["supply"]>
+export type SupplyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"supply_id" | "imported_at" | "updated_at" | "total_amount" | "status" | "supplier_id", ExtArgs["result"]["supply"]>
 export type SupplyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   details?: boolean | Prisma.Supply$detailsArgs<ExtArgs>
   _count?: boolean | Prisma.SupplyCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -488,6 +666,7 @@ export type SupplyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type $SupplyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Supply"
   objects: {
+    supplier: Prisma.$SupplierPayload<ExtArgs>
     details: Prisma.$SupplyDetailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -496,6 +675,7 @@ export type $SupplyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     updated_at: Date
     total_amount: runtime.Decimal
     status: $Enums.SupplyStatus
+    supplier_id: number
   }, ExtArgs["result"]["supply"]>
   composites: {}
 }
@@ -836,6 +1016,7 @@ readonly fields: SupplyFieldRefs;
  */
 export interface Prisma__SupplyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  supplier<T extends Prisma.SupplierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   details<T extends Prisma.Supply$detailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Supply$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplyDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -871,6 +1052,7 @@ export interface SupplyFieldRefs {
   readonly updated_at: Prisma.FieldRef<"Supply", 'DateTime'>
   readonly total_amount: Prisma.FieldRef<"Supply", 'Decimal'>
   readonly status: Prisma.FieldRef<"Supply", 'SupplyStatus'>
+  readonly supplier_id: Prisma.FieldRef<"Supply", 'Int'>
 }
     
 

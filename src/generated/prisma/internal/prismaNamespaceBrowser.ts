@@ -58,6 +58,7 @@ export const ModelName = {
   Author: 'Author',
   Book: 'Book',
   BookAuthor: 'BookAuthor',
+  Supplier: 'Supplier',
   Supply: 'Supply',
   SupplyDetail: 'SupplyDetail',
   Discount: 'Discount',
@@ -168,12 +169,27 @@ export const BookAuthorScalarFieldEnum = {
 export type BookAuthorScalarFieldEnum = (typeof BookAuthorScalarFieldEnum)[keyof typeof BookAuthorScalarFieldEnum]
 
 
+export const SupplierScalarFieldEnum = {
+  supplier_id: 'supplier_id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type SupplierScalarFieldEnum = (typeof SupplierScalarFieldEnum)[keyof typeof SupplierScalarFieldEnum]
+
+
 export const SupplyScalarFieldEnum = {
   supply_id: 'supply_id',
   imported_at: 'imported_at',
   updated_at: 'updated_at',
   total_amount: 'total_amount',
-  status: 'status'
+  status: 'status',
+  supplier_id: 'supplier_id'
 } as const
 
 export type SupplyScalarFieldEnum = (typeof SupplyScalarFieldEnum)[keyof typeof SupplyScalarFieldEnum]
@@ -303,6 +319,16 @@ export const BookOrderByRelevanceFieldEnum = {
 } as const
 
 export type BookOrderByRelevanceFieldEnum = (typeof BookOrderByRelevanceFieldEnum)[keyof typeof BookOrderByRelevanceFieldEnum]
+
+
+export const SupplierOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address'
+} as const
+
+export type SupplierOrderByRelevanceFieldEnum = (typeof SupplierOrderByRelevanceFieldEnum)[keyof typeof SupplierOrderByRelevanceFieldEnum]
 
 
 export const DiscountOrderByRelevanceFieldEnum = {

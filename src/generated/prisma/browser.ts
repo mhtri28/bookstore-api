@@ -53,6 +53,11 @@ export type Book = Prisma.BookModel
  */
 export type BookAuthor = Prisma.BookAuthorModel
 /**
+ * Model Supplier
+ * 
+ */
+export type Supplier = Prisma.SupplierModel
+/**
  * Model Supply
  * 
  */

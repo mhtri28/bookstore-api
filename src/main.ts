@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  console.log('API_KEY:', process.env.API_KEY);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -22,9 +23,7 @@ async function bootstrap() {
         return new UnprocessableEntityException(
           ValidationErrors.map((error) => ({
             field: error.property,
-            errors: error.constraints
-              ? Object.values(error.constraints).join(', ')
-              : 'Invalid value',
+            errors: error.constraints ? Object.values(error.constraints).join(', ') : 'Invalid value',
           })),
         );
       },
@@ -38,7 +37,7 @@ async function bootstrap() {
     .setTitle('Bookstore API')
     .setDescription('Tài liệu API cho hệ thống quản lý bán sách')
     .setVersion('1.0')
-    .addBearerAuth() 
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -51,4 +50,3 @@ async function bootstrap() {
 bootstrap().catch((err) => {
   console.error('Lỗi khởi động server:', err);
 });
-

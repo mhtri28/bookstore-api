@@ -21,6 +21,7 @@ export class SuppliesService {
         // 2. Tạo phiếu nhập & chi tiết phiếu nhập
         const supply = await tx.supply.create({
           data: {
+            supplier_id: 1,
             imported_at: body.importedAt ? new Date(body.importedAt) : new Date(),
             total_amount: totalAmount,
             details: {

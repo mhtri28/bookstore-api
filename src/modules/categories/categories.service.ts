@@ -1,26 +1,66 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Category, Prisma } from '../../generated/prisma/client';
+import { QueryCategoryDto } from './dto/query-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(private prisma: PrismaService) {}
+  async category(categoryWhereUniqueInput: Prisma.CategoryWhereUniqueInput): Promise<Category | null> {
+    return this.prisma.category.findUnique({
+      where: categoryWhereUniqueInput,
+    });
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async categories(query: QueryCategoryDto): Promise<Category[]> {
+    const orderBy: Prisma.CategoryOrderByWithRelationInput = query.orderBy
+      ? { [query.orderBy]: query.sortOrder || 'desc' }
+      : { created_at: 'desc' };
+
+    return this.prisma.category.findMany({
+      skip: query.skip,
+      take: query.take,
+      where: this.buildWhere(query),
+      orderBy,
+    });
+  }
+  async create(data: Prisma.CategoryCreateInput): Promise<Category> {
+    return this.prisma.category.create({
+      data,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async updateCategory(params: {
+    where: Prisma.CategoryWhereUniqueInput;
+    data: Prisma.CategoryUpdateInput;
+  }): Promise<Category> {
+    const { where, data } = params;
+    return this.prisma.category.update({
+      data,
+      where,
+    });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async deleteCategory(where: Prisma.CategoryWhereUniqueInput): Promise<Category> {
+    return this.prisma.category.delete({
+      where,
+    });
   }
+  private buildWhere(query: QueryCategoryDto): Prisma.CategoryWhereInput | undefined {
+    const where: Prisma.CategoryWhereInput = {};
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    if (query.name) {
+      where.name = {
+        contains: query.name,
+      };
+    }
+
+    if (query.description) {
+      where.description = {
+        contains: query.description,
+      };
+    }
+
+    return Object.keys(where).length ? where : undefined;
   }
 }

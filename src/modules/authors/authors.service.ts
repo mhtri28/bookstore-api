@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Author, Prisma } from '../../generated/prisma/client';
+import { QueryAuthorDto } from './dto/query-author.dto';
 
 @Injectable()
 export class AuthorsService {
@@ -13,18 +12,22 @@ export class AuthorsService {
     });
   }
 
-  async authors(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.AuthorWhereUniqueInput;
-    where?: Prisma.AuthorWhereInput;
-    orderBy?: Prisma.AuthorOrderByWithRelationInput;
-  }): Promise<Author[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async authors(query: QueryAuthorDto): Promise<Author[]> {
+    const where: Prisma.AuthorWhereInput | undefined = query.name
+      ? {
+          name: {
+            contains: query.name,
+          },
+        }
+      : undefined;
+
+    const orderBy: Prisma.AuthorOrderByWithRelationInput = query.orderBy
+      ? { [query.orderBy]: query.sortOrder || 'desc' }
+      : { created_at: 'desc' };
+
     return this.prisma.author.findMany({
-      skip,
-      take,
-      cursor,
+      skip: query.skip,
+      take: query.take,
       where,
       orderBy,
     });

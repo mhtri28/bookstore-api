@@ -9,6 +9,8 @@ import { UsersModule } from 'src/modules/users/users.module';
 import { AddressesModule } from 'src/modules/addresses/addresses.module';
 import { SuppliesModule } from 'src/modules/supplies/supplies.module';
 import { AuthorsModule } from './modules/authors/authors.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { BooksModule } from './modules/books/books.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,6 +19,8 @@ import { AuthorsModule } from './modules/authors/authors.module';
     SharedModule,
     AuthModule,
     AuthorsModule,
+    BooksModule,
+    CategoriesModule,
     UsersModule,
     AddressesModule,
     SuppliesModule,

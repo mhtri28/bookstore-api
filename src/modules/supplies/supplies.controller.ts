@@ -6,8 +6,10 @@ import { Auth } from 'src/shared/decorators/auth.decorator';
 import { CreateSupplyBodyDTO, CreateSupplyResDTO } from 'src/modules/supplies/dto/create-supply.dto';
 import { GetSuppliesQueryDTO } from 'src/modules/supplies/dto/get-supplies-query.dto';
 import { GetSupplyResDTO } from 'src/modules/supplies/dto/get-supply.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Auth(Role.ADMIN)
+@ApiTags('Supplies')
 @Controller('supplies')
 export class SuppliesController {
   constructor(private readonly suppliesService: SuppliesService) {}

@@ -6,7 +6,7 @@ import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper
 import { GetSuppliesQueryDTO } from 'src/modules/supplies/dto/get-supplies-query.dto';
 import { paginate, paginatedResponse } from 'src/shared/helpers/pagination.helper';
 import { SupplyModel } from 'src/shared/models/supply.model';
-import { SupplyStatus } from 'src/generated/prisma/enums';
+import { CommonStatus, SupplyStatus } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class SuppliesService {
@@ -15,13 +15,45 @@ export class SuppliesService {
   async create(body: CreateSupplyBodyDTO) {
     try {
       const result = await this.prismaService.$transaction(async (tx) => {
-        // 1. Tính tổng tiền
+        // 1. Kiểm tra supplierId có tồn tại không?
+        const supplier = await tx.supplier.findUnique({
+          where: { supplier_id: body.supplierId },
+        });
+
+        if (!supplier) {
+          throw new BadRequestException('Nhà cung cấp không tồn tại');
+        }
+
+        // 2. Kiểm tra supplierId có Active hay không?
+        if (supplier.status !== CommonStatus.ACTIVE) {
+          throw new BadRequestException('Nhà cung cấp không hoạt động');
+        }
+
+        // 3. Kiểm tra tất cả bookId có tồn tại không?
+        const bookIds = body.details.map((item) => item.bookId);
+        const books = await tx.book.findMany({
+          where: { book_id: { in: bookIds } },
+          select: { book_id: true },
+        });
+
+        const foundBookIds = books.map((book) => book.book_id);
+        const notFoundBookIds = bookIds.filter((id) => !foundBookIds.includes(id));
+
+        if (notFoundBookIds.length > 0) {
+          throw new BadRequestException(`Các bookId không tồn tại: ${notFoundBookIds.join(', ')}`);
+        }
+
+        // 4. Tính tổng tiền
         const totalAmount = body.details.reduce((sum, item) => sum + item.quantity * item.importedPrice, 0);
 
-        // 2. Tạo phiếu nhập & chi tiết phiếu nhập
+        // 5. Tạo phiếu nhập & chi tiết phiếu nhập
         const supply = await tx.supply.create({
           data: {
+<<<<<<< HEAD
             supplier_id: 1,
+=======
+            supplier_id: body.supplierId,
+>>>>>>> b08402ec4797bbd197e6308ee3fa112aa2e650b8
             imported_at: body.importedAt ? new Date(body.importedAt) : new Date(),
             total_amount: totalAmount,
             details: {
@@ -51,7 +83,6 @@ export class SuppliesService {
       };
     } catch (error) {
       handlePrismaError(error, {
-        foreignKeyMessage: 'Book ID không tồn tại',
         defaultMessage: 'Tạo phiếu nhập thất bại',
       });
     }
@@ -99,7 +130,17 @@ export class SuppliesService {
         where,
         ...paginate(page, limit),
         orderBy: { imported_at: 'desc' },
-        include: { details: { include: { book: true } } },
+        include: {
+          supplier: {
+            select: {
+              supplier_id: true,
+              name: true,
+            },
+          },
+          _count: {
+            select: { details: true },
+          },
+        },
       }),
       this.prismaService.supply.count({ where }),
     ]);
@@ -119,7 +160,7 @@ export class SuppliesService {
     try {
       const supply = await this.prismaService.supply.findUniqueOrThrow({
         where: { supply_id: id },
-        include: { details: { include: { book: true } } },
+        include: { supplier: true, details: { include: { book: true } } },
       });
       return {
         message: 'Lấy thông tin phiếu nhập thành công',

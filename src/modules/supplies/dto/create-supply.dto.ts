@@ -32,6 +32,11 @@ export class CreateSupplyDetailDTO {
 }
 
 export class CreateSupplyBodyDTO {
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  supplierId: number;
+
   @IsOptional()
   @IsDateString()
   importedAt?: string;

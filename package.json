@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed": "node -e \"const fs=require('fs'); if(fs.existsSync('prisma/migrations')) fs.rmSync('prisma/migrations',{recursive:true}); \" && prisma migrate reset --force && prisma migrate dev --name init_database && prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -27,14 +28,13 @@
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.6",
-    "@prisma/adapter-mariadb": "^7.3.0",
+    "@prisma/adapter-mariadb": "^7.4.2",
     "@prisma/client": "^7.3.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
-    "dotenv": "^17.3.1",
-    "mysql2": "^3.16.2",
+    "mysql2": "^3.18.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"
@@ -53,8 +53,10 @@
     "@types/express": "^5.0.0",
     "@types/geojson": "^7946.0.16",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.19.7",
+    "@types/node": "^22.19.13",
+    "@types/pg": "^8.18.0",
     "@types/supertest": "^6.0.2",
+    "dotenv": "^17.3.1",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -68,7 +70,8 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.20.0"
   },
   "jest": {

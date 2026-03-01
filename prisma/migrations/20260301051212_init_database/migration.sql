@@ -99,6 +99,7 @@ CREATE TABLE `Supplier` (
     `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Supplier_email_key`(`email`),
+    UNIQUE INDEX `Supplier_phone_key`(`phone`),
     PRIMARY KEY (`supplier_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

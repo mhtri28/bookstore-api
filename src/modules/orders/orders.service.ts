@@ -1,4 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus, Prisma } from '../../generated/prisma/client';
@@ -11,9 +15,8 @@ export class OrdersService {
     const { items, discount_code, ...orderData } = createOrderDto;
 
     if (!items || items.length === 0) {
-      throw new HttpException(
+      throw new BadRequestException(
         'Cần ít nhất một sản phẩm trong đơn hàng',
-        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -25,9 +28,8 @@ export class OrdersService {
       });
 
       if (books.length !== new Set(bookIds).size) {
-        throw new HttpException(
+        throw new NotFoundException(
           'Một hoặc nhiều sách không tồn tại trong hệ thống',
-          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -35,9 +37,8 @@ export class OrdersService {
         const book = books.find((b) => b.book_id === item.book_id)!;
 
         if (book.stock < item.quantity) {
-          throw new HttpException(
+          throw new BadRequestException(
             `Sách "${book.title}" không đủ hàng. Tồn kho: ${book.stock}`,
-            HttpStatus.BAD_REQUEST,
           );
         }
 
@@ -61,25 +62,22 @@ export class OrdersService {
         });
 
         if (!discount) {
-          throw new HttpException(
+          throw new NotFoundException(
             'Mã giảm giá không tồn tại',
-            HttpStatus.NOT_FOUND,
           );
         }
 
         const now = new Date();
 
         if (discount.status !== 'ACTIVE') {
-          throw new HttpException(
+          throw new BadRequestException(
             'Mã giảm giá không còn hiệu lực',
-            HttpStatus.BAD_REQUEST,
           );
         }
 
         if (now < discount.start_at || now > discount.expires_at) {
-          throw new HttpException(
+          throw new BadRequestException(
             'Mã giảm giá chưa đến hạn hoặc đã hết hạn',
-            HttpStatus.BAD_REQUEST,
           );
         }
 
@@ -87,9 +85,8 @@ export class OrdersService {
           discount.usage_limit !== null &&
           discount.used_count >= discount.usage_limit
         ) {
-          throw new HttpException(
+          throw new BadRequestException(
             'Mã giảm giá đã hết lượt sử dụng',
-            HttpStatus.BAD_REQUEST,
           );
         }
 
@@ -97,9 +94,8 @@ export class OrdersService {
           discount.min_order_value &&
           subTotal < Number(discount.min_order_value)
         ) {
-          throw new HttpException(
+          throw new BadRequestException(
             `Đơn hàng tối thiểu ${Number(discount.min_order_value)} mới được áp dụng mã`,
-            HttpStatus.BAD_REQUEST,
           );
         }
 
@@ -160,7 +156,7 @@ export class OrdersService {
       });
     });
   }
-  
+
   async findAll() {
     return this.prisma.order.findMany({
       include: {
@@ -180,9 +176,8 @@ export class OrdersService {
     });
 
     if (!order) {
-      throw new HttpException(
+      throw new NotFoundException(
         'Không tìm thấy đơn hàng',
-        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -197,13 +192,14 @@ export class OrdersService {
       });
 
       if (!order) {
-        throw new HttpException('Đơn hàng không tồn tại', HttpStatus.NOT_FOUND);
+        throw new NotFoundException(
+          'Đơn hàng không tồn tại',
+        );
       }
 
       if (order.status === 'COMPLETED' || order.status === 'CANCELLED') {
-        throw new HttpException(
+        throw new BadRequestException(
           'Đơn hàng đã ở trạng thái cuối cùng',
-          HttpStatus.BAD_REQUEST,
         );
       }
 

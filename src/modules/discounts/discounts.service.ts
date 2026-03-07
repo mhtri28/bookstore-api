@@ -1,4 +1,10 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
@@ -14,14 +20,11 @@ export class DiscountsService {
     const expiresAt = new Date(dto.expires_at);
 
     if (isNaN(startAt.getTime()) || isNaN(expiresAt.getTime())) {
-      throw new HttpException('Ngày không hợp lệ', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Ngày không hợp lệ');
     }
 
     if (startAt >= expiresAt) {
-      throw new HttpException(
-        'Ngày kết thúc phải sau ngày bắt đầu',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Ngày kết thúc phải sau ngày bắt đầu');
     }
 
     try {
@@ -42,15 +45,9 @@ export class DiscountsService {
       });
     } catch (error: any) {
       if (error.code === 'P2002') {
-        throw new HttpException(
-          'Mã giảm giá đã tồn tại',
-          HttpStatus.CONFLICT,
-        );
+        throw new ConflictException('Mã giảm giá đã tồn tại');
       }
-      throw new HttpException(
-        'Lỗi khi tạo mã giảm giá',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException('Lỗi khi tạo mã giảm giá');
     }
   }
 
@@ -64,10 +61,7 @@ export class DiscountsService {
     });
 
     if (!discount) {
-      throw new HttpException(
-        'Mã giảm giá không tồn tại',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException('Mã giảm giá không tồn tại');
     }
 
     return discount;
@@ -78,9 +72,8 @@ export class DiscountsService {
 
     if (dto.usage_limit !== undefined) {
       if (dto.usage_limit < existing.used_count) {
-        throw new HttpException(
+        throw new BadRequestException(
           'Giới hạn sử dụng nhỏ hơn số lượt đã dùng',
-          HttpStatus.BAD_REQUEST,
         );
       }
     }
@@ -95,9 +88,8 @@ export class DiscountsService {
     const discount = await this.findOne(id);
 
     if (discount.used_count > 0) {
-      throw new HttpException(
+      throw new BadRequestException(
         'Không thể xoá mã giảm giá đã sử dụng',
-        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -113,10 +105,7 @@ export class DiscountsService {
       });
 
       if (!discount) {
-        throw new HttpException(
-          'Mã giảm giá không tồn tại',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new NotFoundException('Mã giảm giá không tồn tại');
       }
 
       const now = new Date();
@@ -126,20 +115,14 @@ export class DiscountsService {
         now < discount.start_at ||
         now > discount.expires_at
       ) {
-        throw new HttpException(
-          'Mã giảm giá không hợp lệ',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('Mã giảm giá không hợp lệ');
       }
 
       if (
         discount.usage_limit &&
         discount.used_count >= discount.usage_limit
       ) {
-        throw new HttpException(
-          'Mã giảm giá đã hết lượt',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new BadRequestException('Mã giảm giá đã hết lượt');
       }
 
       let discountAmount = 0;

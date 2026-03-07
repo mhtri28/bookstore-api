@@ -25,7 +25,7 @@ export class BooksService {
     });
 
     if (authors.length !== dto.author_ids.length) {
-      throw new NotFoundException('One or more authors not found');
+      throw new NotFoundException('Một hoặc nhiều tác giả không tồn tại');
     }
     return this.prisma.book.create({
       data: {
@@ -62,7 +62,7 @@ export class BooksService {
     });
 
     if (!existingBook) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Không tìm thấy sách');
     }
 
     let image_url = existingBook.image_url;
@@ -120,7 +120,7 @@ export class BooksService {
     });
 
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Không tìm thấy sách');
     }
 
     return book;
@@ -132,7 +132,7 @@ export class BooksService {
     });
 
     if (!existingBook) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Không tìm thấy sách');
     }
     return this.prisma.book.delete({
       where: { book_id: id },
@@ -158,7 +158,7 @@ export class BooksService {
     });
 
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Không tìm thấy sách');
     }
 
     return {

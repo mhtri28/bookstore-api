@@ -2,15 +2,12 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsInt,
   Min,
-  IsEnum,
   ArrayNotEmpty,
   IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CommonStatus } from 'src/generated/prisma/browser';
 
 export class CreateBookDto {
   @IsString()

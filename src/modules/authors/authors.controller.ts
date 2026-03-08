@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe 
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author as AuthorModel, Prisma } from '../../generated/prisma/client';
+import { Author as AuthorModel } from '../../generated/prisma/client';
 import { QueryAuthorDto } from './dto/query-author.dto';
 @Controller('authors')
 export class AuthorsController {

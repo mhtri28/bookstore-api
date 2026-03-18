@@ -10,7 +10,7 @@ export class AuthorsService {
 
   async author(authorWhereUniqueInput: Prisma.AuthorWhereUniqueInput): Promise<Author | null> {
     try {
-      return this.prismaService.author.findUnique({
+      return await this.prismaService.author.findUnique({
         where: authorWhereUniqueInput,
       });
     } catch (error) {
@@ -34,7 +34,7 @@ export class AuthorsService {
         ? { [query.orderBy]: query.sortOrder || 'desc' }
         : { created_at: 'desc' };
 
-      return this.prismaService.author.findMany({
+      return await this.prismaService.author.findMany({
         skip: query.skip,
         take: query.take,
         where,
@@ -49,7 +49,7 @@ export class AuthorsService {
 
   async create(data: Prisma.AuthorCreateInput): Promise<Author> {
     try {
-      return this.prismaService.author.create({
+      return await this.prismaService.author.create({
         data,
       });
     } catch (error) {
@@ -66,7 +66,7 @@ export class AuthorsService {
   }): Promise<Author> {
     try {
       const { where, data } = params;
-      return this.prismaService.author.update({
+      return await this.prismaService.author.update({
         data,
         where,
       });
@@ -81,7 +81,7 @@ export class AuthorsService {
 
   async deleteAuthor(where: Prisma.AuthorWhereUniqueInput): Promise<Author> {
     try {
-      return this.prismaService.author.delete({
+      return await this.prismaService.author.delete({
         where,
       });
     } catch (error) {

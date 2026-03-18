@@ -94,7 +94,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "transformIgnorePatterns": []
+    "transformIgnorePatterns": [],
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   },
   "main": "index.js",
   "directories": {

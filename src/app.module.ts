@@ -11,6 +11,9 @@ import { SuppliesModule } from 'src/modules/supplies/supplies.module';
 import { AuthorsModule } from './modules/authors/authors.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { BooksModule } from './modules/books/books.module';
+import { SuppliersModule } from 'src/modules/supplier/suppliers.module';
+import { DiscountsModule } from 'src/modules/discounts/discounts.module';
+import { OrdersModule } from 'src/modules/orders/orders.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +25,9 @@ import { BooksModule } from './modules/books/books.module';
     BooksModule,
     CategoriesModule,
     UsersModule,
+    SuppliersModule,
+    DiscountsModule,
+    OrdersModule,
     AddressesModule,
     SuppliesModule,
   ],

@@ -31,7 +31,7 @@ export class BooksService {
         throw new NotFoundException('Một hoặc nhiều tác giả không tồn tại');
       }
 
-      return this.prismaService.book.create({
+      return await this.prismaService.book.create({
         data: {
           title: dto.title,
           price: dto.price,
@@ -83,7 +83,7 @@ export class BooksService {
         image_url = uploadResult.secure_url;
       }
 
-      return this.prismaService.book.update({
+      return await this.prismaService.book.update({
         where: { book_id: id },
         data: {
           title: dto.title,
@@ -120,7 +120,7 @@ export class BooksService {
 
   async findAll() {
     try {
-      return this.prismaService.book.findMany({
+      return await this.prismaService.book.findMany({
         include: {
           bookAuthors: {
             include: {
@@ -167,7 +167,7 @@ export class BooksService {
         throw new NotFoundException('Sách không tồn tại');
       }
 
-      return this.prismaService.book.delete({
+      return await this.prismaService.book.delete({
         where: { book_id: id },
       });
     } catch (error) {

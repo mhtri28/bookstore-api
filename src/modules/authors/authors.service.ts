@@ -1,26 +1,94 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Author, Prisma } from '../../generated/prisma/client';
+import { QueryAuthorDto } from './dto/query-author.dto';
+import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper';
 
 @Injectable()
 export class AuthorsService {
-  create(createAuthorDto: CreateAuthorDto) {
-    return 'This action adds a new author';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async author(authorWhereUniqueInput: Prisma.AuthorWhereUniqueInput): Promise<Author | null> {
+    try {
+      return await this.prismaService.author.findUnique({
+        where: authorWhereUniqueInput,
+      });
+    } catch (error) {
+      handlePrismaError(error, {
+        defaultMessage: 'Lấy thông tin tác giả thất bại',
+      });
+    }
   }
 
-  findAll() {
-    return `This action returns all authors`;
+  async authors(query: QueryAuthorDto): Promise<Author[]> {
+    try {
+      const where: Prisma.AuthorWhereInput | undefined = query.name
+        ? {
+            name: {
+              contains: query.name,
+            },
+          }
+        : undefined;
+
+      const orderBy: Prisma.AuthorOrderByWithRelationInput = query.orderBy
+        ? { [query.orderBy]: query.sortOrder || 'desc' }
+        : { created_at: 'desc' };
+
+      return await this.prismaService.author.findMany({
+        skip: query.skip,
+        take: query.take,
+        where,
+        orderBy,
+      });
+    } catch (error) {
+      handlePrismaError(error, {
+        defaultMessage: 'Lấy danh sách tác giả thất bại',
+      });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} author`;
+  async create(data: Prisma.AuthorCreateInput): Promise<Author> {
+    try {
+      return await this.prismaService.author.create({
+        data,
+      });
+    } catch (error) {
+      handlePrismaError(error, {
+        uniqueMessage: 'Tác giả đã tồn tại',
+        defaultMessage: 'Tạo tác giả thất bại',
+      });
+    }
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    return `This action updates a #${id} author`;
+  async updateAuthor(params: {
+    where: Prisma.AuthorWhereUniqueInput;
+    data: Prisma.AuthorUpdateInput;
+  }): Promise<Author> {
+    try {
+      const { where, data } = params;
+      return await this.prismaService.author.update({
+        data,
+        where,
+      });
+    } catch (error) {
+      handlePrismaError(error, {
+        notFoundMessage: 'Tác giả không tồn tại',
+        uniqueMessage: 'Tác giả đã tồn tại',
+        defaultMessage: 'Cập nhật tác giả thất bại',
+      });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} author`;
+  async deleteAuthor(where: Prisma.AuthorWhereUniqueInput): Promise<Author> {
+    try {
+      return await this.prismaService.author.delete({
+        where,
+      });
+    } catch (error) {
+      handlePrismaError(error, {
+        notFoundMessage: 'Tác giả không tồn tại',
+        defaultMessage: 'Xóa tác giả thất bại',
+      });
+    }
   }
 }

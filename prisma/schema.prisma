@@ -8,6 +8,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
   moduleFormat = "cjs"
+  importFileExtension = ""
 }
 
 // ENUM
@@ -131,9 +132,9 @@ model BookAuthor {
   updated_at    DateTime @updatedAt
 
   book_id   Int
-  book      Book   @relation(fields: [book_id], references: [book_id])
+  book      Book   @relation(fields: [book_id], references: [book_id], onDelete: Cascade)
   author_id Int
-  author    Author @relation(fields: [author_id], references: [author_id])
+  author    Author @relation(fields: [author_id], references: [author_id], onDelete: Cascade)
 
   @@unique([book_id, author_id])
 }

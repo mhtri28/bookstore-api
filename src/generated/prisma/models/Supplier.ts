@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Supplier
@@ -259,17 +259,17 @@ export type SupplierOrderByWithRelationInput = {
 export type SupplierWhereUniqueInput = Prisma.AtLeast<{
   supplier_id?: number
   email?: string
+  phone?: string
   AND?: Prisma.SupplierWhereInput | Prisma.SupplierWhereInput[]
   OR?: Prisma.SupplierWhereInput[]
   NOT?: Prisma.SupplierWhereInput | Prisma.SupplierWhereInput[]
   name?: Prisma.StringFilter<"Supplier"> | string
-  phone?: Prisma.StringNullableFilter<"Supplier"> | string | null
   address?: Prisma.StringNullableFilter<"Supplier"> | string | null
   status?: Prisma.EnumCommonStatusFilter<"Supplier"> | $Enums.CommonStatus
   created_at?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Supplier"> | Date | string
   supplies?: Prisma.SupplyListRelationFilter
-}, "supplier_id" | "email">
+}, "supplier_id" | "email" | "phone">
 
 export type SupplierOrderByWithAggregationInput = {
   supplier_id?: Prisma.SortOrder

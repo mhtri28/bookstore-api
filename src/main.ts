@@ -10,6 +10,7 @@ import { LoggingExceptionFilter } from 'src/shared/filters/logging-exception.fil
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  console.log('API_KEY:', process.env.API_KEY);
 
   app.useGlobalPipes(
     new ValidationPipe({

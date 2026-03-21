@@ -6,6 +6,7 @@ import { TransformInterceptor } from 'src/shared/interceptors/transform.intercep
 import { LoggingInterceptor } from 'src/shared/interceptors/logging.interceptor';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggingExceptionFilter } from 'src/shared/filters/logging-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,15 +23,14 @@ async function bootstrap() {
         return new UnprocessableEntityException(
           ValidationErrors.map((error) => ({
             field: error.property,
-            errors: error.constraints
-              ? Object.values(error.constraints).join(', ')
-              : 'Invalid value',
+            errors: error.constraints ? Object.values(error.constraints).join(', ') : 'Invalid value',
           })),
         );
       },
     }),
   );
 
+  app.useGlobalFilters(new LoggingExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
@@ -38,7 +38,7 @@ async function bootstrap() {
     .setTitle('Bookstore API')
     .setDescription('Tài liệu API cho hệ thống quản lý bán sách')
     .setVersion('1.0')
-    .addBearerAuth() 
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -51,4 +51,3 @@ async function bootstrap() {
 bootstrap().catch((err) => {
   console.error('Lỗi khởi động server:', err);
 });
-

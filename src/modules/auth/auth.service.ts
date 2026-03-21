@@ -1,4 +1,4 @@
-import {  Injectable,  UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserStatus } from 'src/generated/prisma/browser';
 import { LoginBodyDTO } from 'src/modules/auth/dto/login.dto';
 import { RegisterBodyDTO } from 'src/modules/auth/dto/register.dto';

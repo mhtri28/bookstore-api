@@ -6,6 +6,7 @@ import { TransformInterceptor } from 'src/shared/interceptors/transform.intercep
 import { LoggingInterceptor } from 'src/shared/interceptors/logging.interceptor';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggingExceptionFilter } from 'src/shared/filters/logging-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +31,7 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalFilters(new LoggingExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalInterceptors(new LoggingInterceptor());
 

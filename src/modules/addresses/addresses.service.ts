@@ -68,8 +68,12 @@ export class AddressesService {
     }
   }
 
-  async findAll() {
-    const addresses = await this.prismaService.address.findMany();
+  async findAll(userId: number) {
+    const addresses = await this.prismaService.address.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
     return { message: 'Lấy danh sách địa chỉ thành công', addresses };
   }
 

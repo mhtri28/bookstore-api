@@ -18,8 +18,8 @@ export class AddressesController {
   }
 
   @Get()
-  findAll() {
-    return this.addressesService.findAll();
+  findAll(@ActiveUser('userId') userId: number) {
+    return this.addressesService.findAll(userId);
   }
 
   @Get(':id')

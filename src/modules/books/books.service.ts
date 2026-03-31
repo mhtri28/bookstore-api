@@ -2,23 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper';
 
 @Injectable()
 export class BooksService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: CreateBookDto, file?: Express.Multer.File) {
     try {
       let image_url: string | null = null;
 
       if (file) {
-        const uploadResult = await this.cloudinaryService.uploadImage(file);
-        image_url = uploadResult.secure_url;
+        image_url = `/images/${file.filename}`;
       }
 
       const authors = await this.prismaService.author.findMany({
@@ -79,8 +74,7 @@ export class BooksService {
       let image_url = existingBook.image_url;
 
       if (file) {
-        const uploadResult = await this.cloudinaryService.uploadImage(file);
-        image_url = uploadResult.secure_url;
+        image_url = `/images/${file.filename}`;
       }
 
       return await this.prismaService.book.update({

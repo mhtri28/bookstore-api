@@ -1,13 +1,5 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
-  IsInt,
-  Min,
-  ArrayNotEmpty,
-  IsArray,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsNumber, IsInt, Min, ArrayNotEmpty, IsArray } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateBookDto {
   @IsString()
@@ -30,6 +22,7 @@ export class CreateBookDto {
   @IsArray()
   @Type(() => Number)
   @ArrayNotEmpty()
+  @Transform(({ value }) => (Array.isArray(value) ? value.map(Number) : [Number(value)]))
   @IsInt({ each: true })
   author_ids: number[];
 }

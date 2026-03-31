@@ -59,12 +59,12 @@ describe('AddressesService', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(service).toBeDefined();
   });
 
   describe('create', () => {
-    it("should create successfully and set isDefault to true if it's the first address", async () => {
+    it('tạo địa chỉ thành công và tự đặt mặc định nếu là địa chỉ đầu tiên', async () => {
       mockPrismaService.address.count.mockResolvedValue(0);
       mockPrismaService.address.updateMany.mockResolvedValue({});
       mockPrismaService.address.create.mockResolvedValue(dbAddress);
@@ -92,13 +92,10 @@ describe('AddressesService', () => {
           isDefault: true,
         },
       });
-      expect(result).toEqual({
-        message: 'Tạo địa chỉ thành công',
-        result: dbAddress,
-      });
+      expect(result).toEqual({ message: 'Tạo địa chỉ thành công', address: dbAddress });
     });
 
-    it('should create fail if user already has 5 addresses', async () => {
+    it('ném lỗi khi người dùng đã có 5 địa chỉ', async () => {
       mockPrismaService.address.count.mockResolvedValue(5);
       await expect(service.create(user_id, addressData)).rejects.toThrow(
         'Mỗi người dùng chỉ được tạo tối đa 5 địa chỉ',
@@ -107,7 +104,7 @@ describe('AddressesService', () => {
   });
 
   describe('findAll', () => {
-    it('should find all addresses for a user', async () => {
+    it('trả về danh sách địa chỉ của người dùng', async () => {
       mockPrismaService.address.findMany.mockResolvedValue([dbAddress]);
       const result = await service.findAll(user_id);
       expect(result).toEqual({
@@ -118,21 +115,21 @@ describe('AddressesService', () => {
   });
 
   describe('findOne', () => {
-    it('should find one address by id', async () => {
+    it('trả về một địa chỉ theo id', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue(dbAddress);
       const result = await service.findOne(user_id, dbAddress.address_id);
       expect(result.address).toEqual(dbAddress);
       expect(result.message).toBe('Lấy địa chỉ thành công');
     });
 
-    it('should find one address by id fail if address does not exist', async () => {
+    it('ném lỗi khi địa chỉ không tồn tại', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockRejectedValue(prismaNotFoundError());
       await expect(service.findOne(user_id, dbAddress.address_id)).rejects.toThrow('Địa chỉ không tồn tại');
     });
   });
 
   describe('setDefault', () => {
-    it('should set default address successfully', async () => {
+    it('đặt địa chỉ mặc định thành công', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue(dbAddress);
       mockPrismaService.address.updateMany.mockResolvedValue({});
       mockPrismaService.address.update.mockResolvedValue({
@@ -168,14 +165,14 @@ describe('AddressesService', () => {
       expect(result.message).toEqual('Đặt địa chỉ mặc định thành công');
     });
 
-    it('should set default address fail if address does not exist', async () => {
+    it('ném lỗi khi địa chỉ không tồn tại', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockRejectedValue(prismaNotFoundError());
       await expect(service.setDefault(user_id, dbAddress.address_id)).rejects.toThrow('Địa chỉ không tồn tại');
     });
   });
 
   describe('update', () => {
-    it('should update address successfully', async () => {
+    it('cập nhật địa chỉ thành công', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue({ ...dbAddress, isDefault: false });
       mockPrismaService.address.updateMany.mockResolvedValue({});
       mockPrismaService.address.update.mockResolvedValue(dbAddress);
@@ -215,21 +212,21 @@ describe('AddressesService', () => {
       });
     });
 
-    it("should update address fail if trying to set isDefault to true when it's already default", async () => {
+    it('ném lỗi khi bỏ trạng thái mặc định của địa chỉ đang mặc định', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue({ ...dbAddress, isDefault: true });
       await expect(service.update(user_id, dbAddress.address_id, { ...addressData, isDefault: false })).rejects.toThrow(
         'Không thể bỏ trạng thái mặc định của địa chỉ này',
       );
     });
 
-    it('should update address fail if address does not exist', async () => {
+    it('ném lỗi khi địa chỉ không tồn tại', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockRejectedValue(prismaNotFoundError());
       await expect(service.update(user_id, dbAddress.address_id, addressData)).rejects.toThrow('Địa chỉ không tồn tại');
     });
   });
 
   describe('remove', () => {
-    it('should remove address successfully', async () => {
+    it('xóa địa chỉ thành công', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue({ ...dbAddress, isDefault: false });
       mockPrismaService.address.delete.mockResolvedValue(dbAddress);
 
@@ -252,12 +249,12 @@ describe('AddressesService', () => {
       });
     });
 
-    it('should remove address fail if trying to remove default address', async () => {
+    it('ném lỗi khi xóa địa chỉ mặc định', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockResolvedValue({ ...dbAddress, isDefault: true });
       await expect(service.remove(user_id, dbAddress.address_id)).rejects.toThrow('Không thể xóa địa chỉ mặc định');
     });
 
-    it('should remove address fail if address does not exist', async () => {
+    it('ném lỗi khi địa chỉ không tồn tại', async () => {
       mockPrismaService.address.findUniqueOrThrow.mockRejectedValue(prismaNotFoundError());
       await expect(service.remove(user_id, dbAddress.address_id)).rejects.toThrow('Địa chỉ không tồn tại');
     });

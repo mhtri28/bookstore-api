@@ -8,11 +8,15 @@ import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper
 export class AuthorsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async author(authorWhereUniqueInput: Prisma.AuthorWhereUniqueInput): Promise<Author | null> {
+  async author(
+    authorWhereUniqueInput: Prisma.AuthorWhereUniqueInput,
+  ): Promise<{ message: string; author: Author | null }> {
     try {
-      return await this.prismaService.author.findUnique({
+      const author = await this.prismaService.author.findUnique({
         where: authorWhereUniqueInput,
       });
+
+      return { message: 'Lấy thông tin tác giả thành công', author };
     } catch (error) {
       handlePrismaError(error, {
         defaultMessage: 'Lấy thông tin tác giả thất bại',
@@ -20,7 +24,7 @@ export class AuthorsService {
     }
   }
 
-  async authors(query: QueryAuthorDto): Promise<Author[]> {
+  async authors(query: QueryAuthorDto): Promise<{ message: string; authors: Author[] }> {
     try {
       const where: Prisma.AuthorWhereInput | undefined = query.name
         ? {
@@ -34,12 +38,14 @@ export class AuthorsService {
         ? { [query.orderBy]: query.sortOrder || 'desc' }
         : { created_at: 'desc' };
 
-      return await this.prismaService.author.findMany({
+      const authors = await this.prismaService.author.findMany({
         skip: query.skip,
         take: query.take,
         where,
         orderBy,
       });
+
+      return { message: 'Lấy danh sách tác giả thành công', authors };
     } catch (error) {
       handlePrismaError(error, {
         defaultMessage: 'Lấy danh sách tác giả thất bại',
@@ -47,11 +53,13 @@ export class AuthorsService {
     }
   }
 
-  async create(data: Prisma.AuthorCreateInput): Promise<Author> {
+  async create(data: Prisma.AuthorCreateInput): Promise<{ message: string; author: Author }> {
     try {
-      return await this.prismaService.author.create({
+      const author = await this.prismaService.author.create({
         data,
       });
+
+      return { message: 'Tạo tác giả thành công', author };
     } catch (error) {
       handlePrismaError(error, {
         uniqueMessage: 'Tác giả đã tồn tại',
@@ -63,13 +71,15 @@ export class AuthorsService {
   async updateAuthor(params: {
     where: Prisma.AuthorWhereUniqueInput;
     data: Prisma.AuthorUpdateInput;
-  }): Promise<Author> {
+  }): Promise<{ message: string; author: Author }> {
     try {
       const { where, data } = params;
-      return await this.prismaService.author.update({
+      const author = await this.prismaService.author.update({
         data,
         where,
       });
+
+      return { message: 'Cập nhật tác giả thành công', author };
     } catch (error) {
       handlePrismaError(error, {
         notFoundMessage: 'Tác giả không tồn tại',
@@ -79,11 +89,13 @@ export class AuthorsService {
     }
   }
 
-  async deleteAuthor(where: Prisma.AuthorWhereUniqueInput): Promise<Author> {
+  async deleteAuthor(where: Prisma.AuthorWhereUniqueInput): Promise<{ message: string; author: Author }> {
     try {
-      return await this.prismaService.author.delete({
+      const author = await this.prismaService.author.delete({
         where,
       });
+
+      return { message: 'Xóa tác giả thành công', author };
     } catch (error) {
       handlePrismaError(error, {
         notFoundMessage: 'Tác giả không tồn tại',

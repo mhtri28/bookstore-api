@@ -51,6 +51,7 @@ describe('AuthorsService', () => {
   };
 
   beforeEach(async () => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -61,21 +62,21 @@ describe('AuthorsService', () => {
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(service).toBeDefined();
   });
   // Test riêng của mình
-  describe('Get Author By Id', () => {
-    it('should return one author by unique input', async () => {
+  describe('Lấy tác giả theo id', () => {
+    it('trả về tác giả theo id', async () => {
       const result = await service.author({ author_id: 1 });
 
-      expect(result).toEqual(authorsArray[0]);
+      expect(result).toEqual({ message: 'Lấy thông tin tác giả thành công', author: authorsArray[0] });
       expect(prismaService.author.findUnique).toHaveBeenCalledWith({
         where: { author_id: 1 },
       });
     });
 
-    it('should call handlePrismaError when findUnique fails', async () => {
+    it('gọi handlePrismaError khi lấy tác giả thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -91,11 +92,11 @@ describe('AuthorsService', () => {
     });
   });
 
-  describe('Get Authors List', () => {
-    it('should return authors list with default order', async () => {
+  describe('Lấy danh sách tác giả', () => {
+    it('trả về danh sách tác giả mặc định', async () => {
       const result = await service.authors({});
 
-      expect(result).toEqual(authorsArray);
+      expect(result).toEqual({ message: 'Lấy danh sách tác giả thành công', authors: authorsArray });
       expect(prismaService.author.findMany).toHaveBeenCalledWith({
         skip: undefined,
         take: undefined,
@@ -104,7 +105,7 @@ describe('AuthorsService', () => {
       });
     });
 
-    it('should return authors list with filter and custom order', async () => {
+    it('trả về danh sách tác giả theo bộ lọc và sắp xếp', async () => {
       const query = {
         skip: 0,
         take: 10,
@@ -127,7 +128,7 @@ describe('AuthorsService', () => {
       });
     });
 
-    it('should call handlePrismaError when findMany fails', async () => {
+    it('gọi handlePrismaError khi lấy danh sách thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -143,17 +144,17 @@ describe('AuthorsService', () => {
     });
   });
 
-  describe('Create Author', () => {
-    it('should create a new author', async () => {
+  describe('Tạo tác giả', () => {
+    it('tạo tác giả mới', async () => {
       const author = await service.create({
         name: 'Hồ Xuân Hương',
       });
 
-      expect(author).toEqual(authorData);
+      expect(author).toEqual({ message: 'Tạo tác giả thành công', author: authorData });
       expect(prismaService.author.create).toHaveBeenCalledWith({ data: { name: 'Hồ Xuân Hương' } });
     });
 
-    it('should handle error when create fails', async () => {
+    it('gọi handlePrismaError khi tạo thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -170,8 +171,8 @@ describe('AuthorsService', () => {
     });
   });
 
-  describe('Update Author', () => {
-    it('should update an author', async () => {
+  describe('Cập nhật tác giả', () => {
+    it('cập nhật tác giả', async () => {
       const params = {
         where: { author_id: 1 },
         data: { name: 'Nam Cao' },
@@ -179,14 +180,14 @@ describe('AuthorsService', () => {
 
       const result = await service.updateAuthor(params);
 
-      expect(result).toEqual(authorData);
+      expect(result).toEqual({ message: 'Cập nhật tác giả thành công', author: authorData });
       expect(prismaService.author.update).toHaveBeenCalledWith({
         where: { author_id: 1 },
         data: { name: 'Nam Cao' },
       });
     });
 
-    it('should call handlePrismaError when update fails', async () => {
+    it('gọi handlePrismaError khi cập nhật thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -210,17 +211,17 @@ describe('AuthorsService', () => {
     });
   });
 
-  describe('Delete Author', () => {
-    it('should delete an author', async () => {
+  describe('Xóa tác giả', () => {
+    it('xóa tác giả', async () => {
       const result = await service.deleteAuthor({ author_id: 1 });
 
-      expect(result).toEqual(authorData);
+      expect(result).toEqual({ message: 'Xóa tác giả thành công', author: authorData });
       expect(prismaService.author.delete).toHaveBeenCalledWith({
         where: { author_id: 1 },
       });
     });
 
-    it('should call handlePrismaError when delete fails', async () => {
+    it('gọi handlePrismaError khi xóa thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 

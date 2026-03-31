@@ -10,7 +10,7 @@ export class AddressesService {
 
   async create(userId: number, body: CreateAddressBodyDTO) {
     try {
-      const result = await this.prismaService.$transaction(async (tx) => {
+      const address = await this.prismaService.$transaction(async (tx) => {
         // 1. Điếm số lượng address hiện có
         const addressCount = await tx.address.count({
           where: {
@@ -58,7 +58,7 @@ export class AddressesService {
 
       return {
         message: 'Tạo địa chỉ thành công',
-        result,
+        address,
       };
     } catch (error) {
       handlePrismaError(error, {

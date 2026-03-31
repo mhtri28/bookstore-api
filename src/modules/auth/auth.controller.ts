@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterBodyDTO, RegisterResDTO } from 'src/modules/auth/dto/register.dto';
 import { RefreshTokenBodyDTO, RefreshTokenResDTO } from 'src/modules/auth/dto/refresh-token.dto';
-import { LoginResDTO } from 'src/modules/auth/dto/login.dto';
+import { LoginBodyDTO, LoginResDTO } from 'src/modules/auth/dto/login.dto';
 import { LogoutBodyDTO, LogoutResDTO } from 'src/modules/auth/dto/logout.dto';
 import { Auth } from 'src/shared/decorators/auth.decorator';
 
@@ -19,7 +19,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: any) {
+  async login(@Body() body: LoginBodyDTO) {
     const result = await this.authService.login(body);
     return new LoginResDTO(result);
   }

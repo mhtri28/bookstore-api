@@ -17,7 +17,7 @@ describe('OrdersController', () => {
       providers: [{ provide: OrdersService, useValue: mockOrdersService }],
     })
       .overrideGuard(AuthGuard)
-      .useValue({ canActivate: jest.fn(() => true) }) // bypass auth
+      .useValue({ canActivate: jest.fn(() => true) }) 
       .compile();
 
     controller = module.get<OrdersController>(OrdersController);

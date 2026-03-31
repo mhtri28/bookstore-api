@@ -13,7 +13,6 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { Auth } from 'src/shared/decorators/auth.decorator';
 import {
   CreateBookResDTO,
   DeleteBookResDTO,

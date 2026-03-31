@@ -24,8 +24,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Auth } from 'src/shared/decorators/auth.decorator';
 
-// @Auth()
+@Auth()
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}

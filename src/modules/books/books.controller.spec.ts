@@ -14,7 +14,7 @@ describe('BooksController', () => {
     controller = module.get<BooksController>(BooksController);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(controller).toBeDefined();
   });
 });

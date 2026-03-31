@@ -14,7 +14,7 @@ describe('UsersController', () => {
     controller = module.get<UsersController>(UsersController);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(controller).toBeDefined();
   });
 });

@@ -2,34 +2,45 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe 
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author as AuthorModel } from '../../generated/prisma/client';
 import { QueryAuthorDto } from './dto/query-author.dto';
+import {
+  CreateAuthorResDTO,
+  DeleteAuthorResDTO,
+  GetAuthorResDTO,
+  GetAuthorsResDTO,
+  UpdateAuthorResDTO,
+} from './dto/author-response.dto';
 @Controller('authors')
 export class AuthorsController {
   constructor(private readonly authorsService: AuthorsService) {}
 
   @Post()
-  async create(@Body() authorData: CreateAuthorDto): Promise<AuthorModel> {
-    return this.authorsService.create(authorData);
+  async create(@Body() authorData: CreateAuthorDto) {
+    const result = await this.authorsService.create(authorData);
+    return new CreateAuthorResDTO(result);
   }
 
   @Get()
-  findAll(@Query() query: QueryAuthorDto): Promise<AuthorModel[]> {
-    return this.authorsService.authors(query);
+  async findAll(@Query() query: QueryAuthorDto) {
+    const result = await this.authorsService.authors(query);
+    return new GetAuthorsResDTO(result);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<AuthorModel | null> {
-    return this.authorsService.author({ author_id: id });
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.authorsService.author({ author_id: id });
+    return new GetAuthorResDTO(result);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateAuthorDto: UpdateAuthorDto): Promise<AuthorModel> {
-    return this.authorsService.updateAuthor({ where: { author_id: id }, data: updateAuthorDto });
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateAuthorDto: UpdateAuthorDto) {
+    const result = await this.authorsService.updateAuthor({ where: { author_id: id }, data: updateAuthorDto });
+    return new UpdateAuthorResDTO(result);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<AuthorModel> {
-    return this.authorsService.deleteAuthor({ author_id: id });
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.authorsService.deleteAuthor({ author_id: id });
+    return new DeleteAuthorResDTO(result);
   }
 }

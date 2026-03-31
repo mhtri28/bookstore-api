@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsString, Length, Matches } from 'class-validator';
-import { AddressModel } from 'src/generated/prisma/models';
 
 export class CreateAddressBodyDTO {
   @IsString()
@@ -19,13 +18,4 @@ export class CreateAddressBodyDTO {
   @Type(() => Boolean)
   @IsBoolean()
   isDefault: boolean;
-}
-
-export class CreateAddressResDTO {
-  message: string;
-  address: AddressModel;
-
-  constructor(partial: Partial<CreateAddressResDTO>) {
-    Object.assign(this, partial);
-  }
 }

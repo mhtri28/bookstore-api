@@ -1,18 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BooksService } from './books.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import * as helper from 'src/shared/helpers/handle-prisma-error.helper';
-import { NotFoundException } from '@nestjs/common';
 
 describe('BooksService', () => {
   let service: BooksService;
   let prismaService: PrismaService;
-  let cloudinaryService: CloudinaryService;
-
-  const uploadResult = {
-    secure_url: 'https://res.cloudinary.com/demo/image/upload/book.jpg',
-  };
 
   const authors = [
     { author_id: 1, name: 'Nam Cao' },
@@ -45,10 +38,6 @@ describe('BooksService', () => {
     },
   };
 
-  const mockCloudinaryService = {
-    uploadImage: jest.fn(),
-  };
-
   beforeEach(async () => {
     jest.restoreAllMocks();
     jest.clearAllMocks();
@@ -59,22 +48,15 @@ describe('BooksService', () => {
     mockPrismaService.book.update.mockResolvedValue(bookData);
     mockPrismaService.book.findMany.mockResolvedValue([bookData]);
     mockPrismaService.book.delete.mockResolvedValue(bookData);
-    mockCloudinaryService.uploadImage.mockResolvedValue(uploadResult);
-
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BooksService,
-        { provide: PrismaService, useValue: mockPrismaService },
-        { provide: CloudinaryService, useValue: mockCloudinaryService },
-      ],
+      providers: [BooksService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<BooksService>(BooksService);
     prismaService = module.get<PrismaService>(PrismaService);
-    cloudinaryService = module.get<CloudinaryService>(CloudinaryService);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(service).toBeDefined();
   });
 
@@ -87,11 +69,10 @@ describe('BooksService', () => {
       author_ids: [1, 2],
     };
 
-    it('should create a book without image', async () => {
+    it('tạo sách không có ảnh', async () => {
       const result = await service.create(createDto);
 
-      expect(result).toEqual(bookData);
-      expect(cloudinaryService.uploadImage).not.toHaveBeenCalled();
+      expect(result).toEqual({ message: 'Tạo sách thành công', book: bookData });
       expect(prismaService.author.findMany).toHaveBeenCalledWith({
         where: {
           author_id: { in: [1, 2] },
@@ -121,28 +102,27 @@ describe('BooksService', () => {
       });
     });
 
-    it('should upload image and create book with image url', async () => {
-      const file = { buffer: Buffer.from('img') } as Express.Multer.File;
+    it('tạo sách với image_url từ filename', async () => {
+      const file = { filename: 'book.jpg' } as Express.Multer.File;
 
       await service.create(createDto, file);
 
-      expect(cloudinaryService.uploadImage).toHaveBeenCalledWith(file);
       expect(prismaService.book.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
-            image_url: uploadResult.secure_url,
+            image_url: '/images/book.jpg',
           }),
         }),
       );
     });
 
-    it('should throw not found when one or many authors do not exist', async () => {
+    it('ném lỗi khi một hoặc nhiều tác giả không tồn tại', async () => {
       mockPrismaService.author.findMany.mockResolvedValueOnce([authors[0]]);
 
       await expect(service.create(createDto)).rejects.toThrow('Một hoặc nhiều tác giả không tồn tại');
     });
 
-    it('should call handlePrismaError when create fails', async () => {
+    it('gọi handlePrismaError khi tạo thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -168,8 +148,8 @@ describe('BooksService', () => {
       author_ids: [2],
     };
 
-    it('should update a book with image and relations', async () => {
-      const file = { buffer: Buffer.from('img') } as Express.Multer.File;
+    it('cập nhật sách với ảnh và quan hệ', async () => {
+      const file = { filename: 'book.jpg' } as Express.Multer.File;
 
       await service.update(1, updateDto, file);
 
@@ -177,14 +157,13 @@ describe('BooksService', () => {
         where: { book_id: 1 },
         include: { bookAuthors: true },
       });
-      expect(cloudinaryService.uploadImage).toHaveBeenCalledWith(file);
       expect(prismaService.book.update).toHaveBeenCalledWith({
         where: { book_id: 1 },
         data: {
           title: 'Song mon',
           price: 140000,
           stock: 30,
-          image_url: uploadResult.secure_url,
+          image_url: '/images/book.jpg',
           category: {
             connect: { category_id: 2 },
           },
@@ -196,7 +175,7 @@ describe('BooksService', () => {
       });
     });
 
-    it('should keep existing image when no file provided', async () => {
+    it('giữ ảnh cũ khi không có file', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce({
         ...bookData,
         image_url: 'old-image',
@@ -204,7 +183,6 @@ describe('BooksService', () => {
 
       await service.update(1, { title: 'Updated title' });
 
-      expect(cloudinaryService.uploadImage).not.toHaveBeenCalled();
       expect(prismaService.book.update).toHaveBeenCalledWith({
         where: { book_id: 1 },
         data: {
@@ -216,13 +194,13 @@ describe('BooksService', () => {
       });
     });
 
-    it('should throw not found when book does not exist', async () => {
+    it('ném lỗi khi sách không tồn tại', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.update(99, updateDto)).rejects.toThrow('Sách không tồn tại');
     });
 
-    it('should call handlePrismaError when update fails', async () => {
+    it('gọi handlePrismaError khi cập nhật thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -241,10 +219,10 @@ describe('BooksService', () => {
   });
 
   describe('findAll', () => {
-    it('should return books list', async () => {
+    it('trả về danh sách sách', async () => {
       const result = await service.findAll();
 
-      expect(result).toEqual([bookData]);
+      expect(result).toEqual({ message: 'Lấy danh sách sách thành công', books: [bookData] });
       expect(prismaService.book.findMany).toHaveBeenCalledWith({
         include: {
           bookAuthors: {
@@ -258,7 +236,7 @@ describe('BooksService', () => {
       });
     });
 
-    it('should call handlePrismaError when findAll fails', async () => {
+    it('gọi handlePrismaError khi lấy danh sách thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -275,16 +253,16 @@ describe('BooksService', () => {
   });
 
   describe('findOne', () => {
-    it('should return one book by id', async () => {
+    it('trả về một sách theo id', async () => {
       const result = await service.findOne(1);
 
-      expect(result).toEqual(bookData);
+      expect(result).toEqual({ message: 'Lấy chi tiết sách thành công', book: bookData });
       expect(prismaService.book.findUnique).toHaveBeenCalledWith({
         where: { book_id: 1 },
       });
     });
 
-    it('should throw not found when book does not exist', async () => {
+    it('ném lỗi khi sách không tồn tại', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.findOne(99)).rejects.toThrow('Sách không tồn tại');
@@ -292,10 +270,10 @@ describe('BooksService', () => {
   });
 
   describe('remove', () => {
-    it('should delete a book', async () => {
+    it('xóa sách', async () => {
       const result = await service.remove(1);
 
-      expect(result).toEqual(bookData);
+      expect(result).toEqual({ message: 'Xóa sách thành công', book: bookData });
       expect(prismaService.book.findUnique).toHaveBeenCalledWith({
         where: { book_id: 1 },
       });
@@ -304,13 +282,13 @@ describe('BooksService', () => {
       });
     });
 
-    it('should throw not found when deleting non-existing book', async () => {
+    it('ném lỗi khi xóa sách không tồn tại', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.remove(99)).rejects.toThrow('Sách không tồn tại');
     });
 
-    it('should call handlePrismaError when remove fails', async () => {
+    it('gọi handlePrismaError khi xóa thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 
@@ -328,7 +306,7 @@ describe('BooksService', () => {
   });
 
   describe('getAuthorsByBook', () => {
-    it('should return authors by book id', async () => {
+    it('trả về tác giả theo book id', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce({
         book_id: 1,
         title: 'Doi thua',
@@ -338,6 +316,7 @@ describe('BooksService', () => {
       const result = await service.getAuthorsByBook(1);
 
       expect(result).toEqual({
+        message: 'Lấy danh sách tác giả của sách thành công',
         book_id: 1,
         title: 'Doi thua',
         authors,
@@ -361,13 +340,13 @@ describe('BooksService', () => {
       });
     });
 
-    it('should throw not found when book does not exist', async () => {
+    it('ném lỗi khi sách không tồn tại', async () => {
       mockPrismaService.book.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.getAuthorsByBook(99)).rejects.toThrow('Sách không tồn tại');
     });
 
-    it('should call handlePrismaError when getAuthorsByBook fails', async () => {
+    it('gọi handlePrismaError khi lấy tác giả theo sách thất bại', async () => {
       const dbError = new Error('DB error');
       const handledError = new Error('Handled error');
 

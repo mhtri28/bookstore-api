@@ -10,7 +10,7 @@ export class CategoriesService {
 
   async category(categoryWhereUniqueInput: Prisma.CategoryWhereUniqueInput): Promise<Category | null> {
     try {
-      return this.prismaService.category.findUnique({
+      return await this.prismaService.category.findUnique({
         where: categoryWhereUniqueInput,
       });
     } catch (error) {
@@ -26,7 +26,7 @@ export class CategoriesService {
         ? { [query.orderBy]: query.sortOrder || 'desc' }
         : { created_at: 'desc' };
 
-      return this.prismaService.category.findMany({
+      return await this.prismaService.category.findMany({
         skip: query.skip,
         take: query.take,
         where: this.buildWhere(query),
@@ -41,7 +41,7 @@ export class CategoriesService {
 
   async create(data: Prisma.CategoryCreateInput): Promise<Category> {
     try {
-      return this.prismaService.category.create({
+      return await this.prismaService.category.create({
         data,
       });
     } catch (error) {
@@ -58,7 +58,7 @@ export class CategoriesService {
   }): Promise<Category> {
     try {
       const { where, data } = params;
-      return this.prismaService.category.update({
+      return await this.prismaService.category.update({
         data,
         where,
       });
@@ -73,7 +73,7 @@ export class CategoriesService {
 
   async deleteCategory(where: Prisma.CategoryWhereUniqueInput): Promise<Category> {
     try {
-      return this.prismaService.category.delete({
+      return await this.prismaService.category.delete({
         where,
       });
     } catch (error) {

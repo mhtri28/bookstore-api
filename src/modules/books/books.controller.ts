@@ -25,6 +25,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Auth } from 'src/shared/decorators/auth.decorator';
+import { UploadImageInterceptor } from 'src/shared/interceptors/upload-image.interceptor';
 
 @Auth()
 @Controller('books')
@@ -32,17 +33,7 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './src/public/images',
-        filename: (req, file, callback) => {
-          const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(null, uniqueName + extname(file.originalname));
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(UploadImageInterceptor('images'))
   async create(@UploadedFile() file: Express.Multer.File, @Body() dto: CreateBookDto) {
     const result = await this.booksService.create(dto, file);
     return new CreateBookResDTO(result);
@@ -54,17 +45,7 @@ export class BooksController {
     return new GetBookAuthorsResDTO(result);
   }
   @Patch(':id')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './src/public/images',
-        filename: (req, file, callback) => {
-          const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(null, uniqueName + extname(file.originalname));
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(UploadImageInterceptor('images'))
   async update(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,

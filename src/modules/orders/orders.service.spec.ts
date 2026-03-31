@@ -46,9 +46,7 @@ describe('OrdersService', () => {
 
   describe('create', () => {
     it('ném lỗi nếu không có sản phẩm', async () => {
-      await expect(service.create(1, { items: [] } as any)).rejects.toThrow(
-        'Cần ít nhất một sản phẩm trong đơn hàng',
-      );
+      await expect(service.create(1, { items: [] } as any)).rejects.toThrow('Cần ít nhất một sản phẩm trong đơn hàng');
     });
 
     it('ném lỗi nếu sách không tồn tại', async () => {
@@ -58,15 +56,13 @@ describe('OrdersService', () => {
         }),
       );
 
-      await expect(
-        service.create(1, { items: [{ book_id: 1, quantity: 1 }] } as any),
-      ).rejects.toThrow('Một hoặc nhiều sách không tồn tại trong hệ thống');
+      await expect(service.create(1, { items: [{ book_id: 1, quantity: 1 }] } as any)).rejects.toThrow(
+        'Một hoặc nhiều sách không tồn tại trong hệ thống',
+      );
     });
 
     it('tạo đơn hàng thành công không có mã giảm giá', async () => {
-      const mockBooks = [
-        { book_id: 1, title: 'Book A', stock: 10, price: 100 },
-      ];
+      const mockBooks = [{ book_id: 1, title: 'Book A', stock: 10, price: 100 }];
 
       const mockOrder = {
         order_id: 1,
@@ -124,9 +120,7 @@ describe('OrdersService', () => {
         }),
       );
 
-      await expect(service.updateStatus(1, 'CANCELLED' as any)).rejects.toThrow(
-        'Đơn hàng không tồn tại',
-      );
+      await expect(service.updateStatus(1, 'CANCELLED' as any)).rejects.toThrow('Đơn hàng không tồn tại');
     });
 
     it('ném lỗi nếu đơn đã ở trạng thái cuối', async () => {
@@ -138,9 +132,7 @@ describe('OrdersService', () => {
         }),
       );
 
-      await expect(service.updateStatus(1, 'CANCELLED' as any)).rejects.toThrow(
-        'Đơn hàng đã ở trạng thái cuối cùng',
-      );
+      await expect(service.updateStatus(1, 'CANCELLED' as any)).rejects.toThrow('Đơn hàng đã ở trạng thái cuối cùng');
     });
 
     it('hủy đơn hàng thành công và hoàn lại tồn kho', async () => {

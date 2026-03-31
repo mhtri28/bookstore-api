@@ -5,11 +5,14 @@ import { RefreshTokenBodyDTO, RefreshTokenResDTO } from 'src/modules/auth/dto/re
 import { LoginBodyDTO, LoginResDTO } from 'src/modules/auth/dto/login.dto';
 import { LogoutBodyDTO, LogoutResDTO } from 'src/modules/auth/dto/logout.dto';
 import { Auth } from 'src/shared/decorators/auth.decorator';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Register a new user account' })
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: RegisterBodyDTO) {
@@ -17,6 +20,7 @@ export class AuthController {
     return new RegisterResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Login with email and password' })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginBodyDTO) {
@@ -24,6 +28,8 @@ export class AuthController {
     return new LoginResDTO(result);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Refresh access token' })
   @Auth()
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
@@ -32,6 +38,9 @@ export class AuthController {
     return new RefreshTokenResDTO(result);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Logout and invalidate refresh token' })
+  @Auth()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Body() body: LogoutBodyDTO) {

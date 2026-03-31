@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DiscountsController } from './discounts.controller';
 import { DiscountsService } from './discounts.service';
+import { AuthGuard } from 'src/shared/guards/access-token.guard';
 
 describe('DiscountsController', () => {
   let controller: DiscountsController;
@@ -8,8 +9,11 @@ describe('DiscountsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DiscountsController],
-      providers: [DiscountsService],
-    }).compile();
+      providers: [{ provide: DiscountsService, useValue: {} }],
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: jest.fn(() => true) })
+      .compile();
 
     controller = module.get<DiscountsController>(DiscountsController);
   });

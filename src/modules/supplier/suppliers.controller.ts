@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
@@ -15,17 +6,17 @@ import { UpdateSupplierStatusDto } from './dto/update-status-supplier.dto';
 import { Role } from 'src/generated/prisma/enums';
 import { Auth } from 'src/shared/decorators/auth.decorator';
 import {
-  CreateSupplierResDTO,
-  DeleteSupplierResDTO,
-  GetSupplierResDTO,
-  GetSuppliersResDTO,
-  UpdateSupplierResDTO,
+  CreateSupplierResDTO, DeleteSupplierResDTO, GetSupplierResDTO, GetSuppliersResDTO, UpdateSupplierResDTO,
 } from './dto/supplier-response.dto';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Suppliers')
+@ApiBearerAuth()
 @Controller('suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
+  @ApiOperation({ summary: 'Create a new supplier' })
   @Auth(Role.ADMIN)
   @Post()
   async create(@Body() dto: CreateSupplierDto) {
@@ -33,6 +24,7 @@ export class SuppliersController {
     return new CreateSupplierResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Get all suppliers' })
   @Auth(Role.ADMIN)
   @Get()
   async findAll() {
@@ -40,6 +32,7 @@ export class SuppliersController {
     return new GetSuppliersResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Get a specific supplier by ID' })
   @Auth(Role.ADMIN)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -47,6 +40,7 @@ export class SuppliersController {
     return new GetSupplierResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Update a supplier' })
   @Auth(Role.ADMIN)
   @Patch(':id')
   async update(
@@ -57,6 +51,7 @@ export class SuppliersController {
     return new UpdateSupplierResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Update supplier status' })
   @Auth(Role.ADMIN)
   @Patch(':id/status')
   async updateStatus(
@@ -67,6 +62,7 @@ export class SuppliersController {
     return new UpdateSupplierResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Delete a supplier' })
   @Auth(Role.ADMIN)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {

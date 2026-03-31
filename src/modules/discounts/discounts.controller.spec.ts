@@ -14,7 +14,7 @@ describe('DiscountsController', () => {
     controller = module.get<DiscountsController>(DiscountsController);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(controller).toBeDefined();
   });
 });

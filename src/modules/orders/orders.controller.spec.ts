@@ -14,7 +14,7 @@ describe('OrdersController', () => {
     controller = module.get<OrdersController>(OrdersController);
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(controller).toBeDefined();
   });
 });

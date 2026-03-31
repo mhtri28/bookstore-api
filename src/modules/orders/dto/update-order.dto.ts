@@ -1,35 +1,26 @@
-import { IsInt, IsOptional, ValidateNested, IsArray } from 'class-validator';
+import { IsInt, IsOptional, ValidateNested, IsArray, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CreateOrderItemDto } from './create-order.dto';
 
 export class UpdateOrderItemDto extends CreateOrderItemDto {
-
-  @ApiPropertyOptional({
-    example: 10,
-  })
   @IsOptional()
   @IsInt()
   order_item_id?: number;
 }
 
 export class UpdateOrderDto {
-
-  @ApiPropertyOptional({ example: 'Nguyen Van B' })
   @IsOptional()
+  @IsString()
   receiver_name?: string;
 
-  @ApiPropertyOptional({ example: '0999999999' })
   @IsOptional()
+  @IsString()
   receiver_phone?: string;
 
-  @ApiPropertyOptional({ example: '456 Tran Hung Dao, HCM' })
   @IsOptional()
+  @IsString()
   shipping_address?: string;
 
-  @ApiPropertyOptional({
-    type: [UpdateOrderItemDto],
-  })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

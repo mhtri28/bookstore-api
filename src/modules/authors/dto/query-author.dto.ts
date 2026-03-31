@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, isString, IsString, IsIn } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsIn } from 'class-validator';
 
 export class QueryAuthorDto {
   @IsOptional()

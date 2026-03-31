@@ -1,15 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { SuppliesService } from './supplies.service';
-import { UpdateSupplyBodyDTO, UpdateSupplyResDTO } from './dto/update-supply.dto';
-import { Role } from 'src/generated/prisma/browser';
+import { UpdateSupplyBodyDTO } from './dto/update-supply.dto';
+import { Role } from 'src/generated/prisma/enums';
 import { Auth } from 'src/shared/decorators/auth.decorator';
-import { CreateSupplyBodyDTO, CreateSupplyResDTO } from 'src/modules/supplies/dto/create-supply.dto';
-import { GetSuppliesQueryDTO } from 'src/modules/supplies/dto/get-supplies-query.dto';
-import { GetSupplyResDTO } from 'src/modules/supplies/dto/get-supply.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateSupplyBodyDTO } from './dto/create-supply.dto';
+import { GetSuppliesQueryDTO } from './dto/get-supplies-query.dto';
+import {
+  ActionSupplyResDTO,
+  CreateSupplyResDTO,
+  GetSuppliesResDTO,
+  GetSupplyResDTO,
+  UpdateSupplyResDTO,
+} from './dto/supply-response.dto';
 
 @Auth(Role.ADMIN)
-@ApiTags('Supplies')
 @Controller('supplies')
 export class SuppliesController {
   constructor(private readonly suppliesService: SuppliesService) {}
@@ -21,29 +34,35 @@ export class SuppliesController {
   }
 
   @Get()
-  findAll(@Query() query: GetSuppliesQueryDTO) {
-    return this.suppliesService.findAll(query);
+  async findAll(@Query() query: GetSuppliesQueryDTO) {
+    const result = await this.suppliesService.findAll(query);
+    return new GetSuppliesResDTO(result);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const result = await this.suppliesService.findOne(Number(id));
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.suppliesService.findOne(id);
     return new GetSupplyResDTO(result);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateSupplyBodyDTO) {
-    const result = await this.suppliesService.update(Number(id), body);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateSupplyBodyDTO,
+  ) {
+    const result = await this.suppliesService.update(id, body);
     return new UpdateSupplyResDTO(result);
   }
 
   @Patch(':id/cancel')
-  cancel(@Param('id') id: string) {
-    return this.suppliesService.cancel(Number(id));
+  async cancel(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.suppliesService.cancel(id);
+    return new ActionSupplyResDTO(result);
   }
 
   @Patch(':id/complete')
-  complete(@Param('id') id: string) {
-    return this.suppliesService.complete(Number(id));
+  async complete(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.suppliesService.complete(id);
+    return new ActionSupplyResDTO(result);
   }
 }

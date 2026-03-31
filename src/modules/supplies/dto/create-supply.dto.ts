@@ -11,7 +11,6 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { SupplyModel } from 'src/shared/models/supply.model';
 
 export class CreateSupplyDetailDTO {
   @IsNotEmpty()
@@ -46,13 +45,4 @@ export class CreateSupplyBodyDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateSupplyDetailDTO)
   details: CreateSupplyDetailDTO[];
-}
-
-export class CreateSupplyResDTO {
-  message: string;
-  supply: SupplyModel;
-
-  constructor(partial: Partial<CreateSupplyResDTO>) {
-    Object.assign(this, partial);
-  }
 }

@@ -13,10 +13,20 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { Auth } from 'src/shared/decorators/auth.decorator';
+import {
+  CreateBookResDTO,
+  DeleteBookResDTO,
+  GetBookAuthorsResDTO,
+  GetBookResDTO,
+  GetBooksResDTO,
+  UpdateBookResDTO,
+} from './dto/book-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
+// @Auth()
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
@@ -33,13 +43,15 @@ export class BooksController {
       }),
     }),
   )
-  create(@UploadedFile() file: Express.Multer.File, @Body() dto: CreateBookDto) {
-    return this.booksService.create(dto, file);
+  async create(@UploadedFile() file: Express.Multer.File, @Body() dto: CreateBookDto) {
+    const result = await this.booksService.create(dto, file);
+    return new CreateBookResDTO(result);
   }
 
   @Get(':id/authors')
-  getAuthorsByBook(@Param('id', ParseIntPipe) id: number) {
-    return this.booksService.getAuthorsByBook(id);
+  async getAuthorsByBook(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.booksService.getAuthorsByBook(id);
+    return new GetBookAuthorsResDTO(result);
   }
   @Patch(':id')
   @UseInterceptors(
@@ -53,22 +65,30 @@ export class BooksController {
       }),
     }),
   )
-  update(@Param('id', ParseIntPipe) id: number, @UploadedFile() file: Express.Multer.File, @Body() dto: UpdateBookDto) {
-    return this.booksService.update(id, dto, file);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: UpdateBookDto,
+  ) {
+    const result = await this.booksService.update(id, dto, file);
+    return new UpdateBookResDTO(result);
   }
 
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  async findAll() {
+    const result = await this.booksService.findAll();
+    return new GetBooksResDTO(result);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.booksService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.booksService.findOne(id);
+    return new GetBookResDTO(result);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.booksService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.booksService.remove(id);
+    return new DeleteBookResDTO(result);
   }
 }

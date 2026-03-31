@@ -1,52 +1,45 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '../../../generated/prisma/enums';
+import { OrderStatus } from 'src/generated/prisma/enums';
 
-export class OrderItemResponseDto {
-
-  @ApiProperty({ example: 1 })
+export class MappedOrderItem {
+  order_item_id: number;
   book_id: number;
-
-  @ApiProperty({ example: 'Clean Code' })
   title: string;
-
-  @ApiProperty({ example: 2 })
   quantity: number;
-
-  @ApiProperty({ example: 120000 })
   price: number;
 }
 
-export class OrderResponseDto {
+export class MappedOrderDiscount {
+  code: string;
+}
 
-  @ApiProperty({ example: 1 })
+export class MappedOrder {
   order_id: number;
-
-  @ApiProperty({ example: 'PENDING' })
   status: OrderStatus;
-
-  @ApiProperty({ example: 240000 })
   total_price: number;
-
-  @ApiProperty({ example: 20000 })
   discount_amount: number;
-
-  @ApiProperty()
   created_at: Date;
+  discount: MappedOrderDiscount | null;
+  items: MappedOrderItem[];
+}
 
-  @ApiProperty({
-    example: {
-      code: 'SUMMER10',
-      discount_amount: 20000,
-    },
-    required: false,
-  })
-  discount?: {
-    code: string;
-    discount_amount: number;
-  };
+export class CreateOrderResDTO {
+  message: string;
+  order: MappedOrder;
 
-  @ApiProperty({
-    type: [OrderItemResponseDto],
-  })
-  items: OrderItemResponseDto[];
+  constructor(partial: Partial<CreateOrderResDTO>) {
+    Object.assign(this, partial);
+  }
+}
+
+export class GetOrderResDTO extends CreateOrderResDTO {}
+
+export class UpdateOrderStatusResDTO extends CreateOrderResDTO {}
+
+export class GetOrdersResDTO {
+  message: string;
+  orders: MappedOrder[];
+
+  constructor(partial: Partial<GetOrdersResDTO>) {
+    Object.assign(this, partial);
+  }
 }

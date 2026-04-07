@@ -60,7 +60,7 @@ export class DiscountsController {
   }
 
   @ApiOperation({ summary: 'Apply a discount code to an order' })
-  @Auth(Role.USER)
+  @Auth()
   @Post('apply')
   async applyDiscount(@Body() dto: ApplyDiscountDto) {
     const result = await this.discountsService.applyDiscount(dto);

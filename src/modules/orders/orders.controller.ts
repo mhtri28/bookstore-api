@@ -17,7 +17,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @ApiOperation({ summary: 'Create a new order' })
-  @Auth(Role.USER)
+  @Auth()
   @Post()
   async create(
     @ActiveUser('userId') userId: number,

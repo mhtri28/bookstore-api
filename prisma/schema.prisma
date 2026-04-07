@@ -55,7 +55,7 @@ model User {
   fullname   String
   email      String     @unique
   password   String
-  role       Role       @default(USER)
+  role       Role       @default(ADMIN)
   status     UserStatus @default(ACTIVE)
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt

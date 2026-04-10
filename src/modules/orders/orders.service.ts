@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus, Prisma } from '../../generated/prisma/client';
@@ -51,17 +47,36 @@ export class OrdersService {
 
         let subTotal = 0;
 
+        // for (const item of items) {
+        //   const book = books.find((b) => b.book_id === item.book_id)!;
+
+        //   if (book.stock < item.quantity) {
+        //     throw new BadRequestException(`Sách "${book.title}" không đủ hàng. Tồn kho: ${book.stock}`);
+        //   }
+
+        //   await tx.book.update({
+        //     where: { book_id: book.book_id },
+        //     data: { stock: { decrement: item.quantity } },
+        //   });
+
+        //   subTotal += Number(book.price) * item.quantity;
+        // }
         for (const item of items) {
           const book = books.find((b) => b.book_id === item.book_id)!;
 
-          if (book.stock < item.quantity) {
-            throw new BadRequestException(`Sách "${book.title}" không đủ hàng. Tồn kho: ${book.stock}`);
-          }
-
-          await tx.book.update({
-            where: { book_id: book.book_id },
-            data: { stock: { decrement: item.quantity } },
+          const result = await tx.book.updateMany({
+            where: {
+              book_id: book.book_id,
+              stock: { gte: item.quantity }, // chỉ update nếu đủ hàng
+            },
+            data: {
+              stock: { decrement: item.quantity },
+            },
           });
+
+          if (result.count === 0) {
+            throw new BadRequestException(`Sách "${book.title}" không đủ hàng hoặc đã được mua bởi người khác`);
+          }
 
           subTotal += Number(book.price) * item.quantity;
         }

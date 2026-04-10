@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -9,6 +9,7 @@ export class CreateOrderItemDto {
 
   @ApiProperty({ example: 2 })
   @IsInt()
+  @Min(1)
   quantity: number;
 }
 

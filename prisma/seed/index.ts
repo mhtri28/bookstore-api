@@ -6,6 +6,11 @@ import { seedSuppliers } from './supplier.seed';
 import { seedBooks } from './book.seed';
 import { seedSupplies } from './supply.seed';
 import { seedUsers } from './user.seed';
+import { seedAuthors } from './author.seed';
+import { seedBookAuthors } from './book-author.seed';
+import { seedAddresses } from './address.seed';
+import { seedDiscounts } from './discount.seed';
+import { seedOrders } from './order.seed';
 
 const adapter = new PrismaMariaDb({
   host: process.env.DATABASE_HOST,
@@ -22,9 +27,14 @@ async function main() {
 
   await seedCategories(prisma);
   await seedSuppliers(prisma);
-  await seedBooks(prisma);
-  await seedSupplies(prisma);
   await seedUsers(prisma);
+  await seedBooks(prisma);
+  await seedAuthors(prisma);
+  await seedBookAuthors(prisma);
+  await seedAddresses(prisma);
+  await seedDiscounts(prisma);
+  await seedSupplies(prisma);
+  await seedOrders(prisma);
 
   console.log('✅ Seed hoàn thành!');
 }

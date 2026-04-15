@@ -3,12 +3,15 @@ import { IsDate, IsEnum, IsNumber, IsOptional, IsPositive } from 'class-validato
 import { SupplyStatus } from 'src/generated/prisma/enums';
 import { IsMinLessThanMax, IsStartDateBeforeEndDate } from 'src/shared/decorators/custom-validator.decorator';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GetSuppliesQueryDTO extends PaginationDto {
+  @ApiPropertyOptional({ enum: SupplyStatus })
   @IsOptional()
   @IsEnum(SupplyStatus)
   status?: SupplyStatus;
 
+  @ApiPropertyOptional({ example: 10 })
   @IsOptional()
   @IsNumber()
   @IsPositive()
@@ -17,11 +20,13 @@ export class GetSuppliesQueryDTO extends PaginationDto {
   })
   minPrice?: number;
 
+  @ApiPropertyOptional({ example: 100 })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   maxPrice?: number;
 
+  @ApiPropertyOptional({ example: '2026-01-01' })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
@@ -30,11 +35,13 @@ export class GetSuppliesQueryDTO extends PaginationDto {
   })
   startDate?: Date;
 
+  @ApiPropertyOptional({ example: '2026-12-31' })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
   endDate?: Date;
 
+  @ApiPropertyOptional({ example: 'keyword' })
   @IsOptional()
   search?: string;
 }

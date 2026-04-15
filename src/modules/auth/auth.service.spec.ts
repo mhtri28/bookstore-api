@@ -26,12 +26,12 @@ describe('AuthService', () => {
     password: hashedPassword,
     role: Role.USER,
     status: UserStatus.ACTIVE,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
   };
 
   const dbRefreshToken = {
-    user_i: 1,
+    user_id: 1,
     token: 'refreshToken',
     expires_at: new Date(Date.now() + 60 * 60 * 1000), // 1 hour later
     created_at: new Date(),
@@ -61,6 +61,9 @@ describe('AuthService', () => {
   };
 
   beforeEach(async () => {
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -80,16 +83,14 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-
-    jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  it('phải được khởi tạo', () => {
     expect(service).toBeDefined();
   });
 
   describe('register', () => {
-    it('should register successfully', async () => {
+    it('đăng ký thành công', async () => {
       const createdUser = {
         user_id: 1,
         email: userData.email,
@@ -97,8 +98,8 @@ describe('AuthService', () => {
         password: hashedPassword,
         role: Role.USER,
         status: UserStatus.ACTIVE,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
       };
 
       mockHashingService.hash.mockResolvedValue(hashedPassword);
@@ -121,7 +122,7 @@ describe('AuthService', () => {
       });
     });
 
-    it('should register fail', async () => {
+    it('ném lỗi khi đăng ký thất bại', async () => {
       mockHashingService.hash.mockResolvedValue(hashedPassword);
       mockPrismaService.user.create.mockRejectedValue(prismaUniqueError());
 
@@ -130,10 +131,10 @@ describe('AuthService', () => {
   });
 
   describe('generateTokens', () => {
-    it('should generate tokens successfully', async () => {
+    it('tạo token thành công', async () => {
       const tokenPayload = {
         userId: 1,
-        role: 'user',
+        role: Role.USER,
       };
 
       const exp = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour
@@ -166,7 +167,7 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should login successfully', async () => {
+    it('đăng nhập thành công', async () => {
       mockPrismaService.user.findUniqueOrThrow.mockResolvedValue(dbUser);
       mockHashingService.compare.mockResolvedValue(true);
       const generateTokensSpy = jest.spyOn(service, 'generateTokens').mockResolvedValue({
@@ -199,7 +200,7 @@ describe('AuthService', () => {
       });
     });
 
-    it('should login fail if account is not found', async () => {
+    it('ném lỗi khi tài khoản không tồn tại', async () => {
       mockPrismaService.user.findUniqueOrThrow.mockRejectedValue(prismaNotFoundError());
       await expect(
         service.login({
@@ -209,7 +210,7 @@ describe('AuthService', () => {
       ).rejects.toThrow('Email hoặc mật khẩu không đúng');
     });
 
-    it('should login fail if account is not active', async () => {
+    it('ném lỗi khi tài khoản chưa kích hoạt', async () => {
       const inactiveUser = { ...dbUser, status: UserStatus.INACTIVE };
       mockPrismaService.user.findUniqueOrThrow.mockResolvedValue(inactiveUser);
       await expect(
@@ -220,7 +221,7 @@ describe('AuthService', () => {
       ).rejects.toThrow('Tài khoản bị khóa hoặc chưa được kích hoạt');
     });
 
-    it('should login fail if password is incorrect', async () => {
+    it('ném lỗi khi mật khẩu không đúng', async () => {
       mockPrismaService.user.findUniqueOrThrow.mockResolvedValue(dbUser);
       mockHashingService.compare.mockResolvedValue(false);
       await expect(
@@ -233,7 +234,7 @@ describe('AuthService', () => {
   });
 
   describe('refreshToken', () => {
-    it('should refresh token successfully', async () => {
+    it('làm mới token thành công', async () => {
       mockTokenService.verifyRefreshToken.mockResolvedValue({
         userId: dbUser.user_id,
         role: dbUser.role,
@@ -270,13 +271,13 @@ describe('AuthService', () => {
       });
     });
 
-    it('should refresh token fail if token is invalid', async () => {
+    it('ném lỗi khi refresh token không hợp lệ', async () => {
       mockTokenService.verifyRefreshToken.mockRejectedValue(new Error('Invalid token'));
 
       await expect(service.refreshToken('invalidToken')).rejects.toThrow('Làm mới token thất bại');
     });
 
-    it('should refresh token fail if token is not found in database', async () => {
+    it('ném lỗi khi refresh token không tồn tại trong DB', async () => {
       mockTokenService.verifyRefreshToken.mockResolvedValue({
         userId: dbUser.user_id,
         role: dbUser.role,
@@ -289,7 +290,7 @@ describe('AuthService', () => {
   });
 
   describe('logout', () => {
-    it('should logout successfully', async () => {
+    it('đăng xuất thành công', async () => {
       mockTokenService.verifyRefreshToken.mockResolvedValue({
         userId: dbUser.user_id,
         role: dbUser.role,
@@ -307,12 +308,12 @@ describe('AuthService', () => {
       expect(result.message).toEqual('Đăng xuất thành công');
     });
 
-    it('should logout fail if token is invalid', async () => {
+    it('ném lỗi khi refresh token không hợp lệ', async () => {
       mockTokenService.verifyRefreshToken.mockRejectedValue(new Error('Invalid token'));
       await expect(service.logout('invalidToken')).rejects.toThrow('Đăng xuất thất bại');
     });
 
-    it('should logout fail if token is not found in database', async () => {
+    it('ném lỗi khi refresh token không tồn tại trong DB', async () => {
       mockTokenService.verifyRefreshToken.mockResolvedValue({
         userId: dbUser.user_id,
         role: dbUser.role,

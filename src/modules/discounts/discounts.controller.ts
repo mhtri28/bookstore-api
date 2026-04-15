@@ -1,81 +1,69 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiBearerAuth,
-  ApiBody,
-} from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { DiscountsService } from './discounts.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { ApplyDiscountDto } from './dto/apply-discount.dto';
+import {
+  CreateDiscountResDTO, UpdateDiscountResDTO, GetDiscountResDTO, GetDiscountsResDTO, DeleteDiscountResDTO, ApplyDiscountResDTO,
+} from './dto/discount-response.dto';
 import { Role } from 'src/generated/prisma/enums';
 import { Auth } from 'src/shared/decorators/auth.decorator';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
-@ApiTags('discounts')
+@ApiTags('Discounts')
 @ApiBearerAuth()
 @Controller('discounts')
 export class DiscountsController {
   constructor(private readonly discountsService: DiscountsService) {}
 
+  @ApiOperation({ summary: 'Create a new discount' })
   @Auth(Role.ADMIN)
   @Post()
-  @ApiOperation({ summary: 'Admin create discount' })
-  @ApiBody({ type: CreateDiscountDto })
-  create(@Body() dto: CreateDiscountDto) {
-    return this.discountsService.create(dto);
+  async create(@Body() dto: CreateDiscountDto) {
+    const result = await this.discountsService.create(dto);
+    return new CreateDiscountResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Get all discounts' })
   @Auth(Role.ADMIN)
   @Get()
-  @ApiOperation({ summary: 'Admin get all discounts' })
-  findAll() {
-    return this.discountsService.findAll();
+  async findAll() {
+    const result = await this.discountsService.findAll();
+    return new GetDiscountsResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Get a specific discount' })
   @Auth(Role.ADMIN)
   @Get(':id')
-  @ApiOperation({ summary: 'Admin get discount by id' })
-  @ApiParam({ name: 'id', example: 1 })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.discountsService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.discountsService.findOne(id);
+    return new GetDiscountResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Update a discount' })
   @Auth(Role.ADMIN)
   @Patch(':id')
-  @ApiOperation({ summary: 'Admin update discount' })
-  @ApiParam({ name: 'id', example: 1 })
-  @ApiBody({ type: UpdateDiscountDto })
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDiscountDto,
   ) {
-    return this.discountsService.update(id, dto);
+    const result = await this.discountsService.update(id, dto);
+    return new UpdateDiscountResDTO(result);
   }
 
+  @ApiOperation({ summary: 'Delete a discount' })
   @Auth(Role.ADMIN)
   @Delete(':id')
-  @ApiOperation({ summary: 'Admin delete discount' })
-  @ApiParam({ name: 'id', example: 1 })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.discountsService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.discountsService.remove(id);
+    return new DeleteDiscountResDTO(result);
   }
 
-  @Auth(Role.USER)
+  @ApiOperation({ summary: 'Apply a discount code to an order' })
+  @Auth()
   @Post('apply')
-  @ApiOperation({ summary: 'User apply discount code' })
-  @ApiBody({ type: ApplyDiscountDto })
-  applyDiscount(@Body() dto: ApplyDiscountDto) {
-    return this.discountsService.applyDiscount(dto);
+  async applyDiscount(@Body() dto: ApplyDiscountDto) {
+    const result = await this.discountsService.applyDiscount(dto);
+    return new ApplyDiscountResDTO(result);
   }
 }

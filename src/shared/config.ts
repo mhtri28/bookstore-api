@@ -42,7 +42,7 @@ if (errors.length > 0) {
       value: eItem.value,
     };
   });
-  throw errorDetails;
+  throw new Error(`Validation failed: ${JSON.stringify(errorDetails)}`);
 }
 
 const envConfig = configServer;

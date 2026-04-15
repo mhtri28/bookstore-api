@@ -2,23 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper';
 
 @Injectable()
 export class BooksService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: CreateBookDto, file?: Express.Multer.File) {
     try {
       let image_url: string | null = null;
 
       if (file) {
-        const uploadResult = await this.cloudinaryService.uploadImage(file);
-        image_url = uploadResult.secure_url;
+        image_url = `/images/${file.filename}`;
       }
 
       const authors = await this.prismaService.author.findMany({
@@ -31,7 +26,7 @@ export class BooksService {
         throw new NotFoundException('Một hoặc nhiều tác giả không tồn tại');
       }
 
-      return this.prismaService.book.create({
+      const book = await this.prismaService.book.create({
         data: {
           title: dto.title,
           price: dto.price,
@@ -57,6 +52,8 @@ export class BooksService {
           category: true,
         },
       });
+
+      return { message: 'Tạo sách thành công', book };
     } catch (error) {
       handlePrismaError(error, {
         foreignKeyMessage: 'Danh mục hoặc tác giả không tồn tại',
@@ -79,11 +76,10 @@ export class BooksService {
       let image_url = existingBook.image_url;
 
       if (file) {
-        const uploadResult = await this.cloudinaryService.uploadImage(file);
-        image_url = uploadResult.secure_url;
+        image_url = `/images/${file.filename}`;
       }
 
-      return this.prismaService.book.update({
+      const book = await this.prismaService.book.update({
         where: { book_id: id },
         data: {
           title: dto.title,
@@ -109,6 +105,8 @@ export class BooksService {
           }),
         },
       });
+
+      return { message: 'Cập nhật sách thành công', book };
     } catch (error) {
       handlePrismaError(error, {
         notFoundMessage: 'Sách không tồn tại',
@@ -120,7 +118,7 @@ export class BooksService {
 
   async findAll() {
     try {
-      return this.prismaService.book.findMany({
+      const books = await this.prismaService.book.findMany({
         include: {
           bookAuthors: {
             include: {
@@ -131,6 +129,11 @@ export class BooksService {
         },
         orderBy: { created_at: 'desc' },
       });
+
+      return {
+        message: 'Lấy danh sách sách thành công',
+        books,
+      };
     } catch (error) {
       handlePrismaError(error, {
         defaultMessage: 'Lấy danh sách sách thất bại',
@@ -148,7 +151,7 @@ export class BooksService {
         throw new NotFoundException('Sách không tồn tại');
       }
 
-      return book;
+      return { message: 'Lấy chi tiết sách thành công', book };
     } catch (error) {
       handlePrismaError(error, {
         notFoundMessage: 'Sách không tồn tại',
@@ -167,9 +170,11 @@ export class BooksService {
         throw new NotFoundException('Sách không tồn tại');
       }
 
-      return this.prismaService.book.delete({
+      const book = await this.prismaService.book.delete({
         where: { book_id: id },
       });
+
+      return { message: 'Xóa sách thành công', book };
     } catch (error) {
       handlePrismaError(error, {
         notFoundMessage: 'Sách không tồn tại',
@@ -203,6 +208,7 @@ export class BooksService {
       }
 
       return {
+        message: 'Lấy danh sách tác giả của sách thành công',
         book_id: book.book_id,
         title: book.title,
         authors: book.bookAuthors.map((ba) => ba.author),

@@ -78,8 +78,12 @@ export class UsersService {
     }
   }
 
-  async updateStatus(id: number, body: UpdateUserStatusBodyDTO) {
+  async updateStatus(userId: number, id: number, body: UpdateUserStatusBodyDTO) {
     try {
+      if (userId === id) {
+        throw new UnauthorizedException('Không thể thay đổi trạng thái của chính mình');
+      }
+
       const updatedUser = await this.prismaService.user.update({
         where: { user_id: id },
         data: {
@@ -129,8 +133,12 @@ export class UsersService {
   }
 
   @Patch(':id/role')
-  async updateRole(id: number, body: UpdateUserRoleBodyDTO) {
+  async updateRole(userId: number, id: number, body: UpdateUserRoleBodyDTO) {
     try {
+      if (userId === id) {
+        throw new UnauthorizedException('Không thể thay đổi vai trò của chính mình');
+      }
+
       const updatedUser = await this.prismaService.user.update({
         where: { user_id: id },
         data: {

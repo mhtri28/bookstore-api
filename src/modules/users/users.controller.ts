@@ -42,8 +42,12 @@ export class UsersController {
 
   @Auth(Role.ADMIN)
   @Patch(':id/status')
-  async updateStatus(@Param('id') id: string, @Body() body: UpdateUserStatusBodyDTO) {
-    const result = await this.usersService.updateStatus(Number(id), body);
+  async updateStatus(
+    @ActiveUser('userId') userId: number,
+    @Param('id') id: string,
+    @Body() body: UpdateUserStatusBodyDTO,
+  ) {
+    const result = await this.usersService.updateStatus(userId, Number(id), body);
     return new GetUserResDTO(result);
   }
 
@@ -55,8 +59,8 @@ export class UsersController {
 
   @Auth(Role.ADMIN)
   @Patch(':id/role')
-  async updateRole(@Param('id') id: string, @Body() body: UpdateUserRoleBodyDTO) {
-    const result = await this.usersService.updateRole(Number(id), body);
+  async updateRole(@ActiveUser('userId') userId: number, @Param('id') id: string, @Body() body: UpdateUserRoleBodyDTO) {
+    const result = await this.usersService.updateRole(userId, Number(id), body);
     return new GetUserResDTO(result);
   }
 }

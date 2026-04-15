@@ -134,8 +134,11 @@ export class UsersService {
     }
   }
 
-  async updateStatus(id: number, body: UpdateUserStatusBodyDTO) {
+  async updateStatus(userId: number, id: number, body: UpdateUserStatusBodyDTO) {
     try {
+      if (userId === id) {
+        throw new UnauthorizedException('Không thể thay đổi trạng thái của chính mình');
+      
       const existingUser = await this.prismaService.user.findUnique({
         where: { user_id: id },
       });
@@ -200,8 +203,13 @@ export class UsersService {
     }
   }
 
-  async updateRole(id: number, body: UpdateUserRoleBodyDTO) {
+  @Patch(':id/role')
+  async updateRole(userId: number, id: number, body: UpdateUserRoleBodyDTO) {
     try {
+      if (userId === id) {
+        throw new UnauthorizedException('Không thể thay đổi vai trò của chính mình');
+      }
+      
       const existingUser = await this.prismaService.user.findUnique({
         where: { user_id: id },
       });

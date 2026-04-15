@@ -54,11 +54,12 @@ export class UsersController {
   @Auth(Role.ADMIN)
   @Patch(':id/status')
   async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @ActiveUser('userId') userId: number,
+    @Param('id') id: string,
     @Body() body: UpdateUserStatusBodyDTO,
   ) {
-    const result = await this.usersService.updateStatus(id, body);
-    return new UpdateUserResDTO(result);
+    const result = await this.usersService.updateStatus(userId, Number(id), body);
+    return new GetUserResDTO(result);
   }
 
   @ApiOperation({ summary: 'Change current user password' })
@@ -75,11 +76,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Update user role' })
   @Auth(Role.ADMIN)
   @Patch(':id/role')
-  async updateRole(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateUserRoleBodyDTO,
-  ) {
-    const result = await this.usersService.updateRole(id, body);
-    return new UpdateUserResDTO(result);
+  async updateRole(@ActiveUser('userId') userId: number, @Param('id') id: string, @Body() body: UpdateUserRoleBodyDTO) {
+    const result = await this.usersService.updateRole(userId, Number(id), body);
+    return new GetUserResDTO(result);
   }
 }

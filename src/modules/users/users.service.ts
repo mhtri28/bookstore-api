@@ -1,14 +1,5 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-  BadRequestException,
-} from '@nestjs/common';
-import {
-  UpdateUserBodyDTO,
-  UpdateUserRoleBodyDTO,
-  UpdateUserStatusBodyDTO,
-} from './dto/update-user.dto';
+import { Injectable, NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { UpdateUserBodyDTO, UpdateUserRoleBodyDTO, UpdateUserStatusBodyDTO } from './dto/update-user.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { handlePrismaError } from 'src/shared/helpers/handle-prisma-error.helper';
 import { ChangePasswordBodyDTO } from './dto/change-password.dto';
@@ -43,10 +34,7 @@ export class UsersService {
       const where: any = {};
 
       if (search) {
-        where.OR = [
-          { email: { contains: search } },
-          { fullname: { contains: search } },
-        ];
+        where.OR = [{ email: { contains: search } }, { fullname: { contains: search } }];
       }
       if (status) where.status = status;
       if (role) where.role = role;
@@ -138,7 +126,8 @@ export class UsersService {
     try {
       if (userId === id) {
         throw new UnauthorizedException('Không thể thay đổi trạng thái của chính mình');
-      
+      }
+
       const existingUser = await this.prismaService.user.findUnique({
         where: { user_id: id },
       });
@@ -176,10 +165,7 @@ export class UsersService {
         throw new NotFoundException('Không tìm thấy người dùng');
       }
 
-      const isCurrentPasswordMatch = await this.hashingService.compare(
-        body.currentPassword,
-        user.password,
-      );
+      const isCurrentPasswordMatch = await this.hashingService.compare(body.currentPassword, user.password);
 
       if (!isCurrentPasswordMatch) {
         throw new UnauthorizedException('Mật khẩu hiện tại không đúng');
@@ -203,13 +189,12 @@ export class UsersService {
     }
   }
 
-  @Patch(':id/role')
   async updateRole(userId: number, id: number, body: UpdateUserRoleBodyDTO) {
     try {
       if (userId === id) {
         throw new UnauthorizedException('Không thể thay đổi vai trò của chính mình');
       }
-      
+
       const existingUser = await this.prismaService.user.findUnique({
         where: { user_id: id },
       });
